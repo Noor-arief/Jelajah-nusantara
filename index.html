@@ -2798,7 +2798,7 @@ function openDestination(name){
 
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden","false");
-    try { const lang=window.JelNusaCurrentLanguage?.()||"en"; window.JelNusaRememberTranslationSources?.(); window.JelNusaTranslate?.(lang); } catch(e) { console.error("JelNusa modal translation failed",e); }
+    try { window.JelNusaTranslateNewContent?.(modal); } catch(e) { console.error("JelNusa modal translation failed",e); }
     lockPageScroll();
     const panel = modal.querySelector(".destination-detail-panel");
     if (panel) {
