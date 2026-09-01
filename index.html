@@ -3251,8 +3251,7 @@ function templateLookup(src,lang){
 function t(key,lang){
  if(lang==="en") return key;
  try{
-  const val=window.i18next.t(key,{defaultValue:null});
-  if(val!==null && val!==undefined) return val;
+  if(window.i18next.exists(key)) return window.i18next.t(key);
  }catch(e){}
  return templateLookup(key,lang);
 }
