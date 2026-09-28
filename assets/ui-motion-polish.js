@@ -389,8 +389,12 @@
       root.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});
 
       setTimeout(function(){
-        const isOpen=root.classList.contains("is-open") || trigger.getAttribute("aria-expanded")==="true";
-        if(!isOpen) trigger.click();
+        if(window.JelNusaLanguageSelector && typeof window.JelNusaLanguageSelector.open==="function"){
+          window.JelNusaLanguageSelector.open();
+        }else{
+          root.classList.add("is-open");
+          trigger.setAttribute("aria-expanded","true");
+        }
         try{ trigger.focus({preventScroll:true}); }catch(_){ trigger.focus(); }
       },180);
     },true);
