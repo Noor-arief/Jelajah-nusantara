@@ -10,7 +10,7 @@ def main():
 
     required = [
         'id="jelLanguageSwitcher"',
-        'class="jl-language-backdrop"',
+        '.jl-language-backdrop',
         'assets/mobile-recovery.css?v=20260928',
         'https://assistant.vireqo.id/client.js',
         'data-client-id="jelnusa-staging"',
