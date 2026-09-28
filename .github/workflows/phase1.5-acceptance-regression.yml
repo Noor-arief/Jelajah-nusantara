@@ -136,6 +136,11 @@ jobs:
           d=webdriver.Chrome(options=opts)
           d.get("https://noor-arief.github.io/Jelajah-nusantara/")
           time.sleep(4)
+          d.execute_script("""
+          const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+          const old=r&&r.getElementById('jl-nusa-motion-v1');
+          if(old) old.remove();
+          """)
           d.execute_script(branch_js)
           time.sleep(1)
           s=d.execute_script("""
