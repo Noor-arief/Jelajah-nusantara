@@ -136,3 +136,20 @@
 .region-hotel-disabled{
   display:none!important;
 }
+
+
+/* Phase 1.5 final visual acceptance — tighten desktop hero start */
+@media (min-width:769px){
+  .hero{
+    padding-top:24px!important;
+  }
+  .hero-container{
+    padding-top:16px!important;
+  }
+}
+
+/* Author footer styles override HTML hidden; force deferred items truly off-canvas. */
+footer a[hidden],
+footer button[hidden]{
+  display:none!important;
+}
