@@ -1,0 +1,97 @@
+name: Phase 1.5 Production Smoke
+
+on:
+  push:
+    branches:
+      - phase-1.5-ui-motion-polish
+    paths:
+      - ".github/workflows/phase1.5-production-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1.5-ui-motion-polish
+      - run: python -m pip install selenium --quiet
+      - name: Live production smoke
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          opts=Options()
+          opts.binary_location=shutil.which("google-chrome")
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+          d=webdriver.Chrome(options=opts)
+          d.get("https://noor-arief.github.io/Jelajah-nusantara/")
+          time.sleep(4)
+
+          base=d.execute_script("""
+          const h=document.getElementById('vireqo-ai-jelnusa-staging');
+          const r=h&&h.shadowRoot;
+          return {
+            phase:document.documentElement.classList.contains('jl-phase15-motion'),
+            css:[...document.styleSheets].some(s=>String(s.href||'').includes('ui-motion-polish.css?v=20260928a')),
+            js:[...document.scripts].some(s=>String(s.src||'').includes('ui-motion-polish.js?v=20260928a')),
+            scrollWidth:document.documentElement.scrollWidth,
+            innerWidth:innerWidth,
+            nusaStyle:!!(r&&r.getElementById('jl-nusa-motion-v1')),
+            inputFont:r?getComputedStyle(r.querySelector('.vireqo-ai-inputbar input')).fontSize:null
+          };
+          """)
+          print("BASE",json.dumps(base))
+          assert base["phase"] and base["css"] and base["js"], base
+          assert base["scrollWidth"]<=base["innerWidth"]+2, base
+          assert base["nusaStyle"], base
+          assert base["inputFont"]=="16px", base
+
+          # Full repeated language loop
+          for lang in ["id","zh","ja","ko","ar","nl","th","en"]:
+              d.find_element(By.CSS_SELECTOR,'.jl-language-trigger').click()
+              time.sleep(.25)
+              d.find_element(By.CSS_SELECTOR,f'.jl-language-menu button[data-lang="{lang}"]').click()
+              time.sleep(.35)
+              current=d.execute_script("return document.documentElement.lang")
+              assert current==lang,(lang,current)
+
+          # NUSA open/close visual states remain functional
+          d.execute_script("""
+          const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+          r.querySelector('.vireqo-ai-launcher').click();
+          """)
+          time.sleep(.35)
+          nusa=d.execute_script("""
+          const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+          const w=r.querySelector('.vireqo-ai-widget');
+          return {
+            hidden:w.hidden,
+            animation:getComputedStyle(w).animationName,
+            messageClass:r.querySelector('.vireqo-ai-message')?.className||''
+          };
+          """)
+          print("NUSA",json.dumps(nusa))
+          assert not nusa["hidden"],nusa
+          assert nusa["animation"]!="none",nusa
+          assert "jl-nusa-message-enter" in nusa["messageClass"],nusa
+
+          d.execute_script("""
+          const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+          r.querySelector('.vireqo-ai-close').click();
+          """)
+          time.sleep(.25)
+
+          d.quit()
+          print("PASS production Phase 1.5 smoke")
+          PY
