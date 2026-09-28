@@ -281,3 +281,5 @@ jobs:
           git add phase6-final-production-regression-report.json
           git commit -m "chore: record Phase 6 final production regression"
           git push origin HEAD:phase-6-final-regression-launch
+
+# rerun after NUSA CTA relevance hotfix
