@@ -250,3 +250,77 @@
     transition-duration: .01ms !important;
   }
 }
+
+
+/* Phase 7 mobile footer accordion — desktop remains unchanged */
+@media (max-width: 760px) {
+  footer .footer-grid{
+    display:block!important;
+  }
+
+  footer .jl-footer-accordion{
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+
+  footer .jl-footer-accordion:first-of-type{
+    border-top:0;
+  }
+
+  footer .jl-footer-accordion-toggle{
+    width:100%;
+    min-height:46px;
+    padding:.72rem 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    background:transparent!important;
+    border:0!important;
+    color:inherit;
+    text-align:left;
+    font:inherit;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  footer .jl-footer-accordion-toggle::after{
+    content:"+";
+    flex:0 0 auto;
+    font-size:1.1rem;
+    line-height:1;
+    opacity:.75;
+    transition:transform 180ms ease;
+  }
+
+  footer .jl-footer-accordion.is-open > .jl-footer-accordion-toggle::after{
+    content:"−";
+  }
+
+  footer .jl-footer-accordion-panel{
+    display:none;
+    padding:0 0 .7rem;
+  }
+
+  footer .jl-footer-accordion.is-open > .jl-footer-accordion-panel{
+    display:block;
+  }
+
+  footer .jl-footer-accordion-panel a{
+    display:block;
+    padding:.42rem 0;
+  }
+
+  footer .footer-container{
+    padding-top:1rem!important;
+    padding-bottom:1.1rem!important;
+  }
+}
+
+@media (min-width: 761px) {
+  footer .jl-footer-accordion-toggle{
+    display:none!important;
+  }
+  footer .jl-footer-accordion-panel{
+    display:block!important;
+  }
+}
