@@ -1,47 +1,89 @@
-/* Phase 1 targeted hotfix v4: mobile language selector stacking + cleanup only. */
+/* Phase 1 targeted hotfix v5: mobile language selector viewport positioning only. */
 (function () {
   "use strict";
 
   const ROOT = "#jelLanguageSwitcher";
   const MOBILE_BP = 768;
-  const HEADER_CLASS = "jl-language-layer-open";
+  let originalParent = null;
+  let originalNextSibling = null;
 
-  function ensureScopedStackingRule() {
-    if (document.getElementById("jl-language-stack-hotfix-v4")) return;
-    const style = document.createElement("style");
-    style.id = "jl-language-stack-hotfix-v4";
-    style.textContent = "@media (max-width: 768px) {" +
-      "header." + HEADER_CLASS + "{z-index:1300!important;}" +
-      "header." + HEADER_CLASS + " " + ROOT + "," +
-      "header." + HEADER_CLASS + " " + ROOT + " .jl-language-menu{z-index:1302!important;}" +
-      ".jl-language-backdrop{z-index:1200!important;}" +
-      "header." + HEADER_CLASS + " " + ROOT + " .jl-language-menu{bottom:calc(100% - 100dvh)!important;}" +
-      "}";
-    document.head.appendChild(style);
+  function getRoot() {
+    return document.querySelector(ROOT);
   }
 
-  function syncHeaderLayer() {
-    const root = document.querySelector(ROOT);
-    const header = document.querySelector("header");
-    if (!header) return;
-    const open = !!root && root.classList.contains("is-open") && window.innerWidth <= MOBILE_BP;
-    header.classList.toggle(HEADER_CLASS, open);
+  function getMenu() {
+    return document.querySelector(".jl-language-menu");
+  }
+
+  function getBackdrop() {
+    return document.querySelector(".jl-language-backdrop");
+  }
+
+  function portalMenuForMobile() {
+    const root = getRoot();
+    const menu = root ? root.querySelector(".jl-language-menu") : getMenu();
+    if (!root || !menu || window.innerWidth > MOBILE_BP) return;
+
+    if (!originalParent) {
+      originalParent = menu.parentNode;
+      originalNextSibling = menu.nextSibling;
+    }
+
+    if (menu.parentNode !== document.body) {
+      document.body.appendChild(menu);
+    }
+
+    Object.assign(menu.style, {
+      display: "block",
+      pointerEvents: "auto",
+      position: "fixed",
+      left: "0",
+      right: "0",
+      bottom: "0",
+      top: "auto",
+      width: "100%",
+      maxWidth: "none",
+      margin: "0",
+      opacity: "1",
+      visibility: "visible",
+      transform: "translateY(0)",
+      zIndex: "1302"
+    });
+  }
+
+  function restoreMenuForDesktop() {
+    const menu = getMenu();
+    if (!menu || !originalParent || window.innerWidth <= MOBILE_BP) return;
+
+    if (menu.parentNode !== originalParent) {
+      if (originalNextSibling && originalNextSibling.parentNode === originalParent) {
+        originalParent.insertBefore(menu, originalNextSibling);
+      } else {
+        originalParent.appendChild(menu);
+      }
+    }
+
+    menu.removeAttribute("style");
   }
 
   function closeLanguageUi() {
-    const root = document.querySelector(ROOT);
+    const root = getRoot();
+    const menu = getMenu();
+
     if (root) {
       root.classList.remove("is-open");
       const trigger = root.querySelector(".jl-language-trigger");
       if (trigger) trigger.setAttribute("aria-expanded", "false");
-      const menu = root.querySelector(".jl-language-menu");
-      if (menu && window.innerWidth <= MOBILE_BP) {
-        menu.style.display = "none";
-        menu.style.pointerEvents = "none";
-      }
     }
 
-    const languageBackdrop = document.querySelector(".jl-language-backdrop");
+    if (menu && window.innerWidth <= MOBILE_BP) {
+      menu.style.display = "none";
+      menu.style.pointerEvents = "none";
+      menu.style.opacity = "0";
+      menu.style.visibility = "hidden";
+    }
+
+    const languageBackdrop = getBackdrop();
     if (languageBackdrop) languageBackdrop.classList.remove("is-visible");
 
     const primaryNav = document.getElementById("primaryNav");
@@ -53,9 +95,6 @@
     const navToggle = document.querySelector(".nav-toggle");
     if (navToggle) navToggle.setAttribute("aria-expanded", "false");
 
-    const header = document.querySelector("header");
-    if (header) header.classList.remove(HEADER_CLASS);
-
     document.body.style.overflow = "";
   }
 
@@ -65,24 +104,34 @@
     setTimeout(closeLanguageUi, 180);
   }
 
-  function bindLayerObserver() {
-    const root = document.querySelector(ROOT);
-    if (!root || root.dataset.jlStackObserved === "1") return;
-    root.dataset.jlStackObserved = "1";
-    const observer = new MutationObserver(syncHeaderLayer);
+  function bindMobilePositioning() {
+    const root = getRoot();
+    if (!root || root.dataset.jlViewportBound === "1") return;
+
+    root.dataset.jlViewportBound = "1";
+
+    const observer = new MutationObserver(function () {
+      if (window.innerWidth <= MOBILE_BP && root.classList.contains("is-open")) {
+        portalMenuForMobile();
+      }
+    });
     observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+
     const trigger = root.querySelector(".jl-language-trigger");
     if (trigger) {
       trigger.addEventListener("click", function () {
-        requestAnimationFrame(syncHeaderLayer);
-        setTimeout(syncHeaderLayer, 20);
+        requestAnimationFrame(function () {
+          if (root.classList.contains("is-open")) portalMenuForMobile();
+        });
+        setTimeout(function () {
+          if (root.classList.contains("is-open")) portalMenuForMobile();
+        }, 30);
       }, true);
     }
-    syncHeaderLayer();
   }
 
   document.addEventListener("click", function (event) {
-    const option = event.target.closest(ROOT + " .jl-language-menu button[data-lang]");
+    const option = event.target.closest(".jl-language-menu button[data-lang]");
     if (!option) return;
     queueClose();
   }, true);
@@ -93,14 +142,20 @@
     return true;
   }
 
-  ensureScopedStackingRule();
-  bindLayerObserver();
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > MOBILE_BP) {
+      restoreMenuForDesktop();
+      closeLanguageUi();
+    }
+  });
+
+  bindMobilePositioning();
 
   if (!bindI18nCleanup()) {
     let attempts = 0;
     const timer = setInterval(function () {
       attempts += 1;
-      bindLayerObserver();
+      bindMobilePositioning();
       if (bindI18nCleanup() || attempts >= 20) clearInterval(timer);
     }, 250);
   }
