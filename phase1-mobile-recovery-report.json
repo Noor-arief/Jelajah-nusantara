@@ -1,8 +1,8 @@
 {
   "status": "PASS",
-  "index_size_before": 7852317,
-  "index_size_after": 7852387,
-  "index_delta": 70,
+  "index_size_before": 7852390,
+  "index_size_after": 7852390,
+  "index_delta": 0,
   "stylesheet": "assets/mobile-recovery.css",
   "stylesheet_bytes": 4626,
   "nusa_loader_preserved": true,
