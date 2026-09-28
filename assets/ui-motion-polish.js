@@ -111,6 +111,10 @@
         opacity:.72;
       }
 
+      @media (max-width:480px){
+        .vireqo-ai-inputbar input{font-size:16px!important}
+      }
+
       @media (prefers-reduced-motion:reduce){
         .vireqo-ai-launcher,
         .vireqo-ai-avatar,
