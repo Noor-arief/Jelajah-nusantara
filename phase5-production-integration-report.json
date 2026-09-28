@@ -1,0 +1,95 @@
+{
+  "frontend": {
+    "base": {
+      "affiliateCards": 35,
+      "affiliateDisclosure": true,
+      "cardCount": 35,
+      "nusaHost": true,
+      "nusaShadow": true,
+      "scrollWidth": 485,
+      "trustCenter": true,
+      "width": 500
+    },
+    "card": {
+      "href": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Raja%20Ampat",
+      "onclick": null,
+      "target": "_blank",
+      "text": "🏨\nFind Stays\n↗"
+    },
+    "modal": {
+      "accommodation": 1,
+      "bookingCount": 1,
+      "duplicateBottom": 0,
+      "duplicateTop": 0,
+      "links": [
+        {
+          "className": "jl-things-book-stay",
+          "href": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Raja%20Ampat",
+          "target": "_blank",
+          "text": "Accommodation — Available ↗"
+        }
+      ]
+    },
+    "nusa_close_reset": true
+  },
+  "backend": {
+    "resolver": {
+      "status": 302,
+      "location": "https://www.booking.com/searchresults.html?ss=Raja+Ampat",
+      "tracked": false
+    },
+    "safe_failures": true,
+    "nusa_cta": [
+      {
+        "label": "Cari Penginapan · Raja Ampat",
+        "url": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Raja+Ampat",
+        "provider": "booking",
+        "product_type": "stay",
+        "destination": "Raja Ampat",
+        "tracked": false
+      },
+      {
+        "label": "Cari Penginapan · Bali",
+        "url": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Bali",
+        "provider": "booking",
+        "product_type": "stay",
+        "destination": "Bali",
+        "tracked": false
+      }
+    ]
+  },
+  "languages": {
+    "id": {
+      "card_labels": 35,
+      "label": "Cari Penginapan"
+    },
+    "en": {
+      "card_labels": 35,
+      "label": "Find Stays"
+    },
+    "zh": {
+      "card_labels": 35,
+      "label": "查找住宿"
+    },
+    "ja": {
+      "card_labels": 35,
+      "label": "宿泊先を探す"
+    },
+    "ko": {
+      "card_labels": 35,
+      "label": "숙소 찾기"
+    },
+    "ar": {
+      "card_labels": 35,
+      "label": "ابحث عن إقامة"
+    },
+    "nl": {
+      "card_labels": 35,
+      "label": "Vind verblijf"
+    },
+    "th": {
+      "card_labels": 35,
+      "label": "ค้นหาที่พัก"
+    }
+  }
+}
