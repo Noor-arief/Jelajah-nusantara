@@ -32,7 +32,7 @@
     }
 
     link.href = cta.url;
-    link.target = "_blank";
+    link.removeAttribute("target");
     link.rel = cta.tracked === false ? "noopener noreferrer" : "noopener noreferrer sponsored";
     link.dataset.affiliateProduct = "stay";
     link.dataset.affiliateProvider = cta.provider;
