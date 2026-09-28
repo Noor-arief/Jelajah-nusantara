@@ -4,6 +4,38 @@
 
   const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const NUSA_HOST_ID = "vireqo-ai-jelnusa-staging";
+  const NUSA_CALLOUT_COPY = {
+    en: "Ask anything with NUSA",
+    id: "Tanyakan apa pun ke NUSA",
+    zh: "向 NUSA 询问任何问题",
+    ja: "NUSAに何でも聞いてみよう",
+    ko: "NUSA에게 무엇이든 물어보세요",
+    ar: "اسأل NUSA عن أي شيء",
+    nl: "Vraag NUSA gerust alles",
+    th: "ถาม NUSA ได้ทุกเรื่อง"
+  };
+
+  function getActiveLanguage(){
+    const raw=(document.documentElement.lang||"en").toLowerCase();
+    if(raw.startsWith("zh")) return "zh";
+    if(raw.startsWith("ja")) return "ja";
+    if(raw.startsWith("ko")) return "ko";
+    if(raw.startsWith("ar")) return "ar";
+    if(raw.startsWith("nl")) return "nl";
+    if(raw.startsWith("th")) return "th";
+    if(raw.startsWith("id")) return "id";
+    return "en";
+  }
+
+  function syncNusaCalloutCopy(root){
+    if(!root) return;
+    const callout=root.querySelector(".jl-nusa-callout");
+    if(!callout) return;
+    const lang=getActiveLanguage();
+    callout.textContent=NUSA_CALLOUT_COPY[lang]||NUSA_CALLOUT_COPY.en;
+    callout.lang=lang;
+    callout.dir=lang==="ar"?"rtl":"ltr";
+  }
 
   function setupSectionMotion(){
     const selectors=[
@@ -223,10 +255,20 @@
     if(shell && launcher && !root.querySelector(".jl-nusa-callout")){
       const callout=document.createElement("div");
       callout.className="jl-nusa-callout";
-      callout.textContent="Ask anything with NUSA";
       callout.setAttribute("aria-hidden","true");
       shell.insertBefore(callout, launcher);
+      syncNusaCalloutCopy(root);
     }
+
+    if(host.dataset.jlCalloutI18n!=="1"){
+      host.dataset.jlCalloutI18n="1";
+      const langObserver=new MutationObserver(()=>syncNusaCalloutCopy(root));
+      langObserver.observe(document.documentElement,{attributes:true,attributeFilter:["lang","dir"]});
+      if(window.i18next && typeof window.i18next.on==="function"){
+        window.i18next.on("languageChanged",()=>syncNusaCalloutCopy(root));
+      }
+    }
+    syncNusaCalloutCopy(root);
 
     if(messages){
       [...messages.querySelectorAll(".vireqo-ai-message")].forEach(el=>el.classList.add("jl-nusa-message-enter"));
