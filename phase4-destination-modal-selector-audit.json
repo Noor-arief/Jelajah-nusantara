@@ -1,0 +1,94 @@
+{
+  "hits": [
+    {
+      "className": "",
+      "grandparent": {
+        "className": "destination-detail-grid",
+        "html": "<div class=\"destination-detail-grid\">\n                <section class=\"destination-detail-section\">\n                    <h3 data-i18n=\"Things to Do\">Things to Do</h3>\n                    <ul><li data-i18n=\"Diving &amp; snorkeling around coral-rich sites\">Diving &amp; snorkeling around coral-rich sites</li><li data-i18n=\"Island hopping and limestone landscapes\">Island hopping and limestone landscapes</li><li data-i18n=\"Trekking to scenic viewpoints\">Trekking to scenic viewpoints</li><li data-i18n=\"Visiting local tourism villages such as Arborek\">Visiting local tourism villages such as Arborek</li><li data-i18n=\"Exploring local crafts and Papuan food\">Exploring local crafts and Papuan food</li></ul>\n                </section>\n\n                <section class=\"destination-detail-section\">\n                    <h3 data-i18n=\"Travel Information\">Travel Information</h3>\n                    <p data-i18n=\"A common route is to fly to Sorong first, then continue by sea toward Waisai and onward to the islands. Exact boat schedules, transfer times and routes can vary, so confirm current schedules before departure.\">A common route is to fly to Sorong first, then continue by sea toward Waisai and onward to the islands. Exact boat schedules, transfer times and routes can vary, so confirm current schedules before departure.</p>\n                    <p><strong data-i18n=\"Best time:\">Best time:</strong> <span data-i18n=\"October–April is commonly recommended for calmer sea conditions for marine activities; weather can still vary.\">October–April is commonly recommended for calmer sea conditions for marine activities; weather can still vary.</span></p>\n                </section>\n\n                <section class=\"destination-detail-section full\">\n                    <h3 data-i18n=\"At a Glance\">At a Glance</h3>\n                    <div class=\"destination-detail-info\">\n                        <div class=\"destination-info-item\"><span data-i18n=\"Best for\">Best for</span><strong data-i18n=\"Diving, snorkeling &amp; island exploration\">Diving, snorkeling &amp; island exploration</strong></div><div class=\"destination-info-item\"><span data-i18n=\"Suggested stay\">Suggested stay</span><strong data-i18n=\"Several days to allow for island transfers\">Several days to allow for island transfers</strong></div><div class=\"destination-info-item\"><span data-i18n=\"Gateway\">Gateway</span><strong data-i18n=\"Sorong → Waisai / Raja Ampat\">Sorong → Waisai / Raja Ampat</strong></div>\n                    </div>\n                </section>\n\n                <section class=\"affiliate-box\">\n                    <h3 data-i18n=\"Where to Stay\">Where to Stay</h3>\n                    <p data-i18n=\"Raja Ampat has local homestays and resorts. The booking button is intentionally not active yet because no approved affiliate URL has been configured.\">Raja Ampat has local homestays and resorts. The booking button is intentionally not active yet because no approved affiliate URL has been configured.</p>\n                    <span class=\"affiliate-coming-soon\">🏨 <span data-i18n=\"Booking Link Coming Soon\">Booking Link Coming Soon</span></span>\n                </section>\n\n                <section class=\"affiliate-box\">\n                    <h3 data-i18n=\"Things to Book\">Things to Book</h3>\n                    <p data-i18n=\"Partner links will be added when approved affiliate programs are available.\">Partner links will be added when approved affiliate programs are available.</p>\n                    <ul style=\"color:rgba(255,255,255,.9);padding-left:1.2rem;line-height:1.7;margin:.7rem 0 0\">\n                        <li data-i18n=\"Accommodation — Coming Soon\">Accommodation — Coming Soon</li>\n                        <li data-i18n=\"Activities — Coming Soon\">Activities — Coming Soon</li>\n                        <li data-i18n=\"Local experiences — Coming Soon\">Local experiences — Coming Soon</li>\n                    </ul>\n                </section>\n            </div>",
+        "tag": "DIV"
+      },
+      "parent": {
+        "className": "affiliate-box",
+        "html": "<section class=\"affiliate-box\">\n                    <h3 data-i18n=\"Where to Stay\">Where to Stay</h3>\n                    <p data-i18n=\"Raja Ampat has local homestays and resorts. The booking button is intentionally not active yet because no approved affiliate URL has been configured.\">Raja Ampat has local homestays and resorts. The booking button is intentionally not active yet because no approved affiliate URL has been configured.</p>\n                    <span class=\"affiliate-coming-soon\">🏨 <span data-i18n=\"Booking Link Coming Soon\">Booking Link Coming Soon</span></span>\n                </section>",
+        "tag": "SECTION"
+      },
+      "tag": "H3",
+      "text": "Where to Stay"
+    },
+    {
+      "className": "",
+      "grandparent": {
+        "className": "affiliate-box",
+        "html": "<section class=\"affiliate-box\">\n                    <h3 data-i18n=\"Where to Stay\">Where to Stay</h3>\n                    <p data-i18n=\"Raja Ampat has local homestays and resorts. The booking button is intentionally not active yet because no approved affiliate URL has been configured.\">Raja Ampat has local homestays and resorts. The booking button is intentionally not active yet because no approved affiliate URL has been configured.</p>\n                    <span class=\"affiliate-coming-soon\">🏨 <span data-i18n=\"Booking Link Coming Soon\">Booking Link Coming Soon</span></span>\n                </section>",
+        "tag": "SECTION"
+      },
+      "parent": {
+        "className": "affiliate-coming-soon",
+        "html": "<span class=\"affiliate-coming-soon\">🏨 <span data-i18n=\"Booking Link Coming Soon\">Booking Link Coming Soon</span></span>",
+        "tag": "SPAN"
+      },
+      "tag": "SPAN",
+      "text": "Booking Link Coming Soon"
+    },
+    {
+      "className": "",
+      "grandparent": {
+        "className": "affiliate-box",
+        "html": "<section class=\"affiliate-box\">\n                    <h3 data-i18n=\"Things to Book\">Things to Book</h3>\n                    <p data-i18n=\"Partner links will be added when approved affiliate programs are available.\">Partner links will be added when approved affiliate programs are available.</p>\n                    <ul style=\"color:rgba(255,255,255,.9);padding-left:1.2rem;line-height:1.7;margin:.7rem 0 0\">\n                        <li data-i18n=\"Accommodation — Coming Soon\">Accommodation — Coming Soon</li>\n                        <li data-i18n=\"Activities — Coming Soon\">Activities — Coming Soon</li>\n                        <li data-i18n=\"Local experiences — Coming Soon\">Local experiences — Coming Soon</li>\n                    </ul>\n                </section>",
+        "tag": "SECTION"
+      },
+      "parent": {
+        "className": "",
+        "html": "<ul style=\"color:rgba(255,255,255,.9);padding-left:1.2rem;line-height:1.7;margin:.7rem 0 0\">\n                        <li data-i18n=\"Accommodation — Coming Soon\">Accommodation — Coming Soon</li>\n                        <li data-i18n=\"Activities — Coming Soon\">Activities — Coming Soon</li>\n                        <li data-i18n=\"Local experiences — Coming Soon\">Local experiences — Coming Soon</li>\n                    </ul>",
+        "tag": "UL"
+      },
+      "tag": "LI",
+      "text": "Accommodation — Coming Soon"
+    },
+    {
+      "className": "",
+      "grandparent": {
+        "className": "affiliate-box",
+        "html": "<section class=\"affiliate-box\">\n                    <h3 data-i18n=\"Things to Book\">Things to Book</h3>\n                    <p data-i18n=\"Partner links will be added when approved affiliate programs are available.\">Partner links will be added when approved affiliate programs are available.</p>\n                    <ul style=\"color:rgba(255,255,255,.9);padding-left:1.2rem;line-height:1.7;margin:.7rem 0 0\">\n                        <li data-i18n=\"Accommodation — Coming Soon\">Accommodation — Coming Soon</li>\n                        <li data-i18n=\"Activities — Coming Soon\">Activities — Coming Soon</li>\n                        <li data-i18n=\"Local experiences — Coming Soon\">Local experiences — Coming Soon</li>\n                    </ul>\n                </section>",
+        "tag": "SECTION"
+      },
+      "parent": {
+        "className": "",
+        "html": "<ul style=\"color:rgba(255,255,255,.9);padding-left:1.2rem;line-height:1.7;margin:.7rem 0 0\">\n                        <li data-i18n=\"Accommodation — Coming Soon\">Accommodation — Coming Soon</li>\n                        <li data-i18n=\"Activities — Coming Soon\">Activities — Coming Soon</li>\n                        <li data-i18n=\"Local experiences — Coming Soon\">Local experiences — Coming Soon</li>\n                    </ul>",
+        "tag": "UL"
+      },
+      "tag": "LI",
+      "text": "Activities — Coming Soon"
+    },
+    {
+      "className": "",
+      "grandparent": {
+        "className": "affiliate-box",
+        "html": "<section class=\"affiliate-box\">\n                    <h3 data-i18n=\"Things to Book\">Things to Book</h3>\n                    <p data-i18n=\"Partner links will be added when approved affiliate programs are available.\">Partner links will be added when approved affiliate programs are available.</p>\n                    <ul style=\"color:rgba(255,255,255,.9);padding-left:1.2rem;line-height:1.7;margin:.7rem 0 0\">\n                        <li data-i18n=\"Accommodation — Coming Soon\">Accommodation — Coming Soon</li>\n                        <li data-i18n=\"Activities — Coming Soon\">Activities — Coming Soon</li>\n                        <li data-i18n=\"Local experiences — Coming Soon\">Local experiences — Coming Soon</li>\n                    </ul>\n                </section>",
+        "tag": "SECTION"
+      },
+      "parent": {
+        "className": "",
+        "html": "<ul style=\"color:rgba(255,255,255,.9);padding-left:1.2rem;line-height:1.7;margin:.7rem 0 0\">\n                        <li data-i18n=\"Accommodation — Coming Soon\">Accommodation — Coming Soon</li>\n                        <li data-i18n=\"Activities — Coming Soon\">Activities — Coming Soon</li>\n                        <li data-i18n=\"Local experiences — Coming Soon\">Local experiences — Coming Soon</li>\n                    </ul>",
+        "tag": "UL"
+      },
+      "tag": "LI",
+      "text": "Local experiences — Coming Soon"
+    },
+    {
+      "className": "",
+      "grandparent": {
+        "className": "destination-detail-cta",
+        "html": "<div class=\"destination-detail-cta\">\n                <div>\n                    <h3 data-i18n=\"Ready to explore Raja Ampat?\">Ready to explore Raja Ampat?</h3>\n                    <p data-i18n=\"Plan first. Booking partner links will be activated when available.\">Plan first. Booking partner links will be activated when available.</p>\n                </div>\n                <button class=\"destination-btn\" type=\"button\" onclick=\"closeDestination();openPlanner('itinerary')\"><span data-i18n=\"Build Itinerary →\">Build Itinerary →</span></button>\n            </div>",
+        "tag": "DIV"
+      },
+      "parent": {
+        "className": "",
+        "html": "<div>\n                    <h3 data-i18n=\"Ready to explore Raja Ampat?\">Ready to explore Raja Ampat?</h3>\n                    <p data-i18n=\"Plan first. Booking partner links will be activated when available.\">Plan first. Booking partner links will be activated when available.</p>\n                </div>",
+        "tag": "DIV"
+      },
+      "tag": "H3",
+      "text": "Ready to explore Raja Ampat?"
+    }
+  ]
+}
