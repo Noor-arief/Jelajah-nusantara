@@ -39,16 +39,16 @@
       position: "fixed",
       left: "0",
       right: "0",
-      bottom: "0",
-      top: "auto",
       width: "100%",
       maxWidth: "none",
       margin: "0",
       opacity: "1",
       visibility: "visible",
-      transform: "translateY(0)",
       zIndex: "1302"
     });
+    menu.style.setProperty("bottom", "0", "important");
+    menu.style.setProperty("top", "auto", "important");
+    menu.style.setProperty("transform", "translateY(0)", "important");
   }
 
   function restoreMenuForDesktop() {
