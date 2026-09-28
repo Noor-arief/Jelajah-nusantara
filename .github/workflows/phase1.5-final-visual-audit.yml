@@ -1,0 +1,88 @@
+name: Phase 1.5 Final Visual Audit
+
+on:
+  push:
+    branches:
+      - phase-1.5-final-visual-fixes
+    paths:
+      - ".github/workflows/phase1.5-final-visual-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1.5-final-visual-fixes
+      - run: python -m pip install selenium --quiet
+      - name: Audit live hero/footer/NUSA surfaces
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          opts=Options()
+          opts.binary_location=shutil.which("google-chrome")
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=1440,1000")
+
+          d=webdriver.Chrome(options=opts)
+          d.get("https://noor-arief.github.io/Jelajah-nusantara/")
+          time.sleep(4)
+
+          data=d.execute_script("""
+          const pack=e=>{
+            if(!e)return null;
+            const c=getComputedStyle(e),r=e.getBoundingClientRect();
+            return {
+              tag:e.tagName,id:e.id||null,className:String(e.className||''),
+              text:(e.innerText||e.textContent||'').trim().slice(0,180),
+              y:r.y,h:r.height,x:r.x,w:r.width,
+              marginTop:c.marginTop,paddingTop:c.paddingTop,
+              paddingBottom:c.paddingBottom,minHeight:c.minHeight,
+              position:c.position
+            };
+          };
+          const all=[...document.querySelectorAll('*')];
+          const heroCandidates=all.filter(e=>{
+            const t=(e.innerText||'');
+            return /Discover\s+Indonesia\s+Beyond/i.test(t) && e.getBoundingClientRect().height>100;
+          }).slice(0,20).map(pack);
+          const footer=document.querySelector('footer');
+          const footerItems=footer?[...footer.querySelectorAll('a,button')].map(pack):[];
+          const coming=all.filter(e=>/coming soon/i.test((e.innerText||e.textContent||''))).map(pack).slice(0,100);
+          const header=[...document.querySelectorAll('header')].map(pack);
+          const main=[...document.querySelectorAll('main')].map(pack);
+          const host=document.getElementById('vireqo-ai-jelnusa-staging');
+          let nusa=null;
+          if(host&&host.shadowRoot){
+            const r=host.shadowRoot;
+            nusa={
+              launcher:pack(r.querySelector('.vireqo-ai-launcher')),
+              shell:pack(r.querySelector('.vireqo-ai-shell')),
+              widget:pack(r.querySelector('.vireqo-ai-widget')),
+              html:r.innerHTML.slice(0,12000)
+            };
+          }
+          return {header,main,heroCandidates,footerItems,coming,nusa};
+          """)
+          Path("phase1.5-final-visual-audit.json").write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding="utf-8")
+          d.quit()
+          PY
+      - name: Commit audit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase1.5-final-visual-audit.json
+          git commit -m "chore: audit final Phase 1.5 visual feedback"
+          git push origin HEAD:phase-1.5-final-visual-fixes
