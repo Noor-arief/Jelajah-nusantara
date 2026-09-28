@@ -73,6 +73,42 @@
         100%{box-shadow:0 0 0 7px rgba(74,222,128,0)}
       }
 
+      .jl-nusa-callout{
+        position:absolute;
+        right:0;
+        bottom:76px;
+        max-width:220px;
+        padding:9px 12px;
+        border-radius:12px 12px 3px 12px;
+        background:#fff;
+        color:#163232;
+        border:1px solid rgba(15,76,76,.14);
+        box-shadow:0 10px 28px rgba(0,0,0,.14);
+        font-size:12px;
+        font-weight:700;
+        line-height:1.25;
+        white-space:nowrap;
+        opacity:0;
+        transform:translateY(6px) scale(.98);
+        animation:jlNusaCalloutIn 320ms cubic-bezier(.22,1,.36,1) 500ms forwards;
+        pointer-events:none;
+      }
+      .jl-nusa-callout::after{
+        content:"";
+        position:absolute;
+        right:18px;
+        bottom:-6px;
+        width:12px;
+        height:12px;
+        background:#fff;
+        border-right:1px solid rgba(15,76,76,.14);
+        border-bottom:1px solid rgba(15,76,76,.14);
+        transform:rotate(45deg);
+      }
+      @keyframes jlNusaCalloutIn{
+        to{opacity:1;transform:none}
+      }
+
       .vireqo-ai-launcher:not([hidden]){
         min-height:62px;
         padding:14px 22px!important;
@@ -102,6 +138,9 @@
         animation:jlNusaWidgetIn 300ms cubic-bezier(.22,1,.36,1) both;
         transform-origin:bottom right;
       }
+      .vireqo-ai-shell:has(.vireqo-ai-widget:not([hidden])) .jl-nusa-callout{
+        display:none!important;
+      }
 
       .vireqo-ai-message.jl-nusa-message-enter{
         animation:jlNusaMessageIn 280ms cubic-bezier(.22,1,.36,1) both;
@@ -126,6 +165,13 @@
       }
 
       @media (max-width:768px){
+        .jl-nusa-callout{
+          bottom:70px;
+          right:2px;
+          max-width:calc(100vw - 36px);
+          font-size:11px;
+          padding:8px 10px;
+        }
         .vireqo-ai-shell{
           right:12px!important;
           bottom:12px!important;
@@ -171,6 +217,16 @@
     const widget=root.querySelector(".vireqo-ai-widget");
     const messages=root.querySelector(".vireqo-ai-messages");
     const submit=root.querySelector(".vireqo-ai-inputbar button");
+    const shell=root.querySelector(".vireqo-ai-shell");
+    const launcher=root.querySelector(".vireqo-ai-launcher");
+
+    if(shell && launcher && !root.querySelector(".jl-nusa-callout")){
+      const callout=document.createElement("div");
+      callout.className="jl-nusa-callout";
+      callout.textContent="Ask anything with NUSA";
+      callout.setAttribute("aria-hidden","true");
+      shell.insertBefore(callout, launcher);
+    }
 
     if(messages){
       [...messages.querySelectorAll(".vireqo-ai-message")].forEach(el=>el.classList.add("jl-nusa-message-enter"));
