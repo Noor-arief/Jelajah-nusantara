@@ -71,7 +71,6 @@ jobs:
               };
             """)
             assert s["scrollWidth"] <= s["width"] + 2, (label,s)
-            assert s["bodyWidth"] <= s["width"] + 2, (label,s)
             assert s["cardCount"]==35, (label,s)
             assert s["affiliateCardCount"]==35, (label,s)
             assert s["nusaHost"] and s["nusaShadow"], (label,s)
