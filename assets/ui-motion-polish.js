@@ -368,11 +368,40 @@
     }
   }
 
+  function setupNavigationPolish(){
+    document.addEventListener("click", function(event){
+      const anchor=event.target.closest("header a, footer a");
+      if(anchor){
+        setTimeout(function(){
+          try{ anchor.blur(); }catch(_){}
+        },0);
+      }
+
+      const languageGuide=event.target.closest('a[href="#jelLanguageSwitcher"]');
+      if(!languageGuide) return;
+
+      event.preventDefault();
+
+      const root=document.getElementById("jelLanguageSwitcher");
+      const trigger=root && root.querySelector(".jl-language-trigger");
+      if(!root || !trigger) return;
+
+      root.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});
+
+      setTimeout(function(){
+        const isOpen=root.classList.contains("is-open") || trigger.getAttribute("aria-expanded")==="true";
+        if(!isOpen) trigger.click();
+        try{ trigger.focus({preventScroll:true}); }catch(_){ trigger.focus(); }
+      },180);
+    },true);
+  }
+
   function init(){
     document.documentElement.classList.add("jl-phase15-motion");
     setupSectionMotion();
     setupNusaMotion();
     setupFooterCleanup();
+    setupNavigationPolish();
   }
 
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init,{once:true});
