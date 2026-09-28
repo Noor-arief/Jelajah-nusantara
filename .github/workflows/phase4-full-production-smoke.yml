@@ -1,0 +1,135 @@
+name: Phase 4 Full Production Smoke
+
+on:
+  push:
+    branches:
+      - phase-4-affiliate-integration
+    paths:
+      - ".github/workflows/phase4-full-production-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - run: python -m pip install selenium --quiet
+
+      - name: Verify live JelNusa affiliate integration
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,shutil,time,urllib.request,urllib.error,urllib.parse
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          o=Options();o.binary_location=shutil.which('google-chrome')
+          o.add_argument('--headless=new');o.add_argument('--no-sandbox');o.add_argument('--disable-dev-shm-usage');o.add_argument('--window-size=430,932')
+          d=webdriver.Chrome(options=o)
+          d.get('https://noor-arief.github.io/Jelajah-nusantara/')
+          time.sleep(5)
+
+          cards=d.execute_script("""
+            return [...document.querySelectorAll('.region-card .jl-affiliate-card-cta')].map(a=>({
+              destination:a.dataset.affiliateDestination,
+              href:a.href,
+              tracked:a.dataset.affiliateTracked,
+              label:a.querySelector('.jl-affiliate-label')?.textContent.trim()
+            }));
+          """)
+          print('CARD COUNT',len(cards))
+          assert len(cards)==35,len(cards)
+          assert len(set(x['destination'] for x in cards))==35
+          assert all(x['tracked']=='server' for x in cards)
+          assert all('assistant.vireqo.id/affiliate/out' in x['href'] for x in cards)
+
+          raja=next(x for x in cards if x['destination']=='Raja Ampat')
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl): return None
+          opener=urllib.request.build_opener(NoRedirect)
+          try:
+              opener.open(raja['href'],timeout=30)
+              raise AssertionError('expected partner redirect')
+          except urllib.error.HTTPError as e:
+              assert e.code==302,e.code
+              loc=e.headers['Location']
+              p=urllib.parse.urlparse(loc);q=urllib.parse.parse_qs(p.query)
+              assert p.hostname=='www.booking.com'
+              assert q.get('ss')==['Raja Ampat'],q
+              assert 'aid' not in q,q
+
+          # Language label follows selected site language.
+          for lang,expected in [('id','Cari Penginapan'),('zh','查找住宿'),('en','Find Stays')]:
+              if d.execute_script('return document.documentElement.lang') != lang:
+                  d.find_element(By.CSS_SELECTOR,'.jl-language-trigger').click();time.sleep(.2)
+                  d.find_element(By.CSS_SELECTOR,f'.jl-language-menu button[data-lang="{lang}"]').click();time.sleep(.5)
+              labels=d.execute_script("return [...document.querySelectorAll('.jl-affiliate-label')].map(x=>x.textContent.trim())")
+              assert len(labels)==35,(lang,len(labels))
+              assert all(x==expected for x in labels),(lang,labels[:4])
+
+          # Return to Indonesian for NUSA smoke.
+          if d.execute_script('return document.documentElement.lang') != 'id':
+              d.find_element(By.CSS_SELECTOR,'.jl-language-trigger').click();time.sleep(.2)
+              d.find_element(By.CSS_SELECTOR,'.jl-language-menu button[data-lang="id"]').click();time.sleep(.5)
+
+          # Open NUSA and send deterministic destination intent.
+          d.execute_script("""
+            const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+            r.querySelector('.vireqo-ai-launcher').click();
+          """)
+          time.sleep(.3)
+          d.execute_script("""
+            const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+            const i=r.querySelector('.vireqo-ai-inputbar input');
+            i.value='Aku ingin liburan ke Raja Ampat. Buat itinerary singkat dan rekomendasi penginapan.';
+            r.querySelector('.vireqo-ai-inputbar').requestSubmit();
+          """)
+
+          # wait for name request
+          for _ in range(40):
+              time.sleep(.25)
+              texts=d.execute_script("""
+                const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+                return [...r.querySelectorAll('.vireqo-ai-message.assistant')].map(x=>x.textContent);
+              """)
+              if any('nama' in x.lower() for x in texts): break
+          else: raise AssertionError(texts)
+
+          d.execute_script("""
+            const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+            const i=r.querySelector('.vireqo-ai-inputbar input');i.value='skip';
+            r.querySelector('.vireqo-ai-inputbar').requestSubmit();
+          """)
+
+          partner=None
+          for _ in range(120):
+              time.sleep(.5)
+              partner=d.execute_script("""
+                const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+                const a=[...r.querySelectorAll('.vireqo-ai-partner-link')].find(x=>x.dataset.affiliateDestination==='Raja Ampat');
+                return a?{text:a.textContent,href:a.href,tracked:a.dataset.affiliateTracked}:null;
+              """)
+              if partner: break
+          print('NUSA CTA',json.dumps(partner,ensure_ascii=False))
+          assert partner, 'NUSA affiliate CTA missing'
+          assert 'Cari Penginapan' in partner['text'],partner
+          assert partner['tracked']=='false',partner
+          assert 'assistant.vireqo.id/affiliate/out' in partner['href'],partner
+
+          # Existing close reset must remain intact.
+          before=d.execute_script("return sessionStorage.getItem('vireqo_ai_session_id:jelnusa-staging')")
+          d.execute_script("""
+            const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+            r.querySelector('.vireqo-ai-close').click();
+          """)
+          time.sleep(.2)
+          after=d.execute_script("return sessionStorage.getItem('vireqo_ai_session_id:jelnusa-staging')")
+          assert before and after and before!=after,(before,after)
+
+          assert d.execute_script('return document.documentElement.scrollWidth <= innerWidth + 2')
+          d.quit()
+          print('PASS LIVE PHASE 4 FULL PRODUCTION SMOKE')
+          PY
