@@ -21,7 +21,7 @@
 
   function portalMenuForMobile() {
     const root = getRoot();
-    const menu = root ? root.querySelector(".jl-language-menu") : getMenu();
+    const menu = (root && root.querySelector(".jl-language-menu")) || getMenu();
     if (!root || !menu || window.innerWidth > MOBILE_BP) return;
 
     if (!originalParent) {
