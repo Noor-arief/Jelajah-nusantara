@@ -85,6 +85,17 @@
     if (!provider || !provider.config.searchTemplate) return null;
 
     var url = provider.config.searchTemplate.replace("{destination}", encodeURIComponent(destination));
+    if (provider.config.mode === "server-resolved") {
+      return {
+        url: url,
+        provider: provider.key,
+        productType: productType,
+        destination: destination,
+        tracked: null,
+        source: "server-resolved"
+      };
+    }
+
     var tracking = provider.config.trackingKey
       ? (config.tracking || {})[provider.config.trackingKey]
       : "";
@@ -133,8 +144,8 @@
   function monetizationStatus() {
     var c = getConfig();
     return {
-      booking: Boolean(c.tracking && c.tracking.bookingAid),
-      agoda: Boolean(c.tracking && c.tracking.agodaCid),
+      booking: c.providers?.booking?.mode === "server-resolved" ? "server-resolved" : false,
+      agoda: false,
       manualOverrides: Object.keys(c.manualOverrides || {}).length
     };
   }
