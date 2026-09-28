@@ -1,0 +1,252 @@
+/* JelNusa Phase 1 — canonical mobile recovery layer
+   Loaded after legacy inline CSS to resolve overlapping mobile overrides
+   without rebuilding the monolithic page. */
+
+@media (max-width: 760px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  header,
+  main,
+  section,
+  footer,
+  .hero,
+  .hero-container,
+  .section-container,
+  .footer-container {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .header-container {
+    width: 100%;
+    min-width: 0;
+    gap: .65rem;
+  }
+
+  .logo,
+  .logo-image {
+    min-width: 0;
+  }
+
+  nav {
+    max-width: min(86vw, 330px);
+    height: 100dvh;
+    padding-top: calc(5.25rem + env(safe-area-inset-top));
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .hero {
+    min-height: 0 !important;
+    padding-bottom: 1.25rem;
+  }
+
+  .hero-container {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
+  .hero-visual {
+    order: 1 !important;
+    width: calc(100% - 24px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    aspect-ratio: 16 / 9 !important;
+    margin: 12px auto 0 !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+  }
+
+  .hero-video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  .hero-content {
+    order: 2 !important;
+    width: 100% !important;
+    padding: 1.25rem 1rem 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero-content h1 {
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  .hero-content p {
+    max-width: 100% !important;
+  }
+
+  .hero-buttons,
+  .hero-cta {
+    width: 100%;
+  }
+
+  .hero-buttons .btn,
+  .hero-cta .btn,
+  .destination-btn,
+  .region-card-actions a,
+  .region-card-actions button {
+    min-height: 46px;
+  }
+
+  .section-container {
+    width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .region-tabs {
+    max-width: calc(100vw - 2rem);
+    scroll-padding-inline: 1rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .region-results,
+  .planning-grid,
+  .pillars-grid,
+  .feature-row,
+  .stats-grid,
+  .footer-grid,
+  .destination-detail-grid,
+  .destination-detail-info {
+    min-width: 0;
+  }
+
+  .region-card,
+  .planning-card,
+  .pillar-card,
+  .feature-content,
+  .feature-image,
+  .destination-card {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .region-card img,
+  .card-image img,
+  .feature-image img {
+    max-width: 100%;
+  }
+
+  .region-card-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .region-card-actions > * {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    white-space: normal;
+    text-align: center;
+  }
+
+  #destinationDetailModal,
+  .planner-modal,
+  .site-modal,
+  .legal-modal {
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  #destinationDetailModal .destination-detail-panel,
+  .planner-modal-card,
+  .site-modal-panel,
+  .legal-panel {
+    width: 100% !important;
+    max-width: 620px !important;
+    max-height: calc(100dvh - 24px) !important;
+    margin: auto !important;
+    box-sizing: border-box !important;
+    overscroll-behavior: contain;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+
+  .jl-rtl .hero-content,
+  .jl-rtl .section-header,
+  .jl-rtl .region-card-body,
+  .jl-rtl .planning-card,
+  .jl-rtl .destination-detail-body {
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+@media (max-width: 430px) {
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.4rem !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .hero-content {
+    padding-left: .9rem !important;
+    padding-right: .9rem !important;
+  }
+
+  .section-container,
+  .footer-container {
+    padding-left: .9rem !important;
+    padding-right: .9rem !important;
+  }
+
+  .region-tabs {
+    max-width: calc(100vw - 1.8rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
