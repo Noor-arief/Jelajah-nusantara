@@ -338,6 +338,9 @@
       if(label==="faq"){
         a.href="/faq/";
       }
+      if(label==="about us"){
+        a.href="/about/";
+      }
     });
 
     /* Hide placeholder/deferred navigation instead of leaving dead links. */
