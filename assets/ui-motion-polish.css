@@ -180,3 +180,35 @@ footer a::after {
   text-decoration: none !important;
   border-bottom: 0 !important;
 }
+
+
+/* Phase 7 desktop density polish — approximate the preferred 90% browser feel
+   without browser zoom, mobile changes, or backend/shared-system changes. */
+@media (min-width:1100px){
+  html{
+    font-size:94%;
+  }
+
+  .hero{
+    padding-top:18px!important;
+  }
+
+  .hero-container{
+    padding-top:10px!important;
+  }
+
+  .hero-buttons,
+  .hero-cta{
+    gap:.85rem!important;
+  }
+
+  .hero-buttons .btn,
+  .hero-cta .btn,
+  .nav-cta{
+    min-height:0!important;
+  }
+
+  header .header-container{
+    gap:1.1rem;
+  }
+}
