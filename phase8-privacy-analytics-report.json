@@ -1,0 +1,26 @@
+{
+  "status": "PASS_WITH_ACTIVATION_DEPENDENCY",
+  "implementation": "consent-first GA4 foundation",
+  "homepage_integration": "loaded indirectly through existing assets/ui-motion-polish.js; giant index.html not rewritten",
+  "static_routes": [
+    "/about/",
+    "/destinations/",
+    "/guides/",
+    "/guides/plan-indonesia-trip/",
+    "/faq/"
+  ],
+  "default_state": "inactive until valid G- measurement ID is configured",
+  "consent_behavior": "Google tag does not load before explicit analytics consent",
+  "privacy_controls": {
+    "google_signals": false,
+    "ad_personalization_signals": false
+  },
+  "measured_events": [
+    "page_view",
+    "affiliate_click"
+  ],
+  "nusa_backend_touched": false,
+  "railway_touched": false,
+  "shared_bima_touched": false,
+  "activation_required": "Set window.JELNUSA_ANALYTICS_ID in assets/analytics-config.js to the production GA4 web stream Measurement ID"
+}
