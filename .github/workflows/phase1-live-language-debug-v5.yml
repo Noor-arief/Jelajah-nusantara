@@ -1,0 +1,133 @@
+name: Phase 1 Live Language Debug v5
+
+on:
+  push:
+    branches:
+      - phase-1-live-language-debug-v5
+    paths:
+      - ".github/workflows/phase1-live-language-debug-v5.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1-live-language-debug-v5
+
+      - name: Install Selenium
+        run: python -m pip install selenium --quiet
+
+      - name: Inspect live production
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          chrome=shutil.which("google-chrome")
+          if not chrome:
+              raise RuntimeError("google-chrome not found")
+
+          opts=Options()
+          opts.binary_location=chrome
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+
+          d=webdriver.Chrome(options=opts)
+          d.get("https://noor-arief.github.io/Jelajah-nusantara/")
+          time.sleep(2)
+
+          def state(label):
+              s=d.execute_script("""
+              const pack=(sel)=>{
+                const e=document.querySelector(sel);
+                if(!e)return null;
+                const c=getComputedStyle(e),r=e.getBoundingClientRect();
+                return {
+                  sel,cls:e.className,style:e.getAttribute('style'),
+                  display:c.display,visibility:c.visibility,opacity:c.opacity,
+                  z:c.zIndex,position:c.position,pointerEvents:c.pointerEvents,
+                  bg:c.backgroundColor,
+                  rect:{x:r.x,y:r.y,w:r.width,h:r.height},
+                  aria:e.getAttribute('aria-expanded')
+                };
+              };
+              const overlays=[...document.querySelectorAll('*')].filter(e=>{
+                const c=getComputedStyle(e),r=e.getBoundingClientRect();
+                return c.display!=='none' && c.visibility!=='hidden' &&
+                  parseFloat(c.opacity||'1')>0 &&
+                  r.width>=innerWidth*.9 && r.height>=innerHeight*.6 &&
+                  ['fixed','absolute','sticky'].includes(c.position);
+              }).map(e=>{
+                const c=getComputedStyle(e),r=e.getBoundingClientRect();
+                return {tag:e.tagName,id:e.id,cls:e.className,z:c.zIndex,pos:c.position,
+                  display:c.display,vis:c.visibility,op:c.opacity,bg:c.backgroundColor,
+                  rect:{x:r.x,y:r.y,w:r.width,h:r.height}};
+              }).slice(0,50);
+              return {
+                href:location.href,
+                lang:document.documentElement.lang,
+                bodyStyle:document.body.getAttribute('style'),
+                bodyOverflow:getComputedStyle(document.body).overflow,
+                header:pack('header'),
+                root:pack('#jelLanguageSwitcher'),
+                trigger:pack('.jl-language-trigger'),
+                menu:pack('.jl-language-menu'),
+                languageBackdrop:pack('.jl-language-backdrop'),
+                primaryNav:pack('#primaryNav'),
+                navBackdrop:pack('#navBackdrop'),
+                overlays
+              };
+              """)
+              Path(f"phase1-live-{label}.json").write_text(json.dumps(s,ensure_ascii=False,indent=2),encoding="utf-8")
+              print(label, json.dumps(s,ensure_ascii=False))
+              return s
+
+          before=state("before")
+          d.find_element(By.CSS_SELECTOR,".jl-language-trigger").click()
+          time.sleep(.5)
+          opened=state("opened")
+
+          native_result={"ok":False}
+          try:
+              d.find_element(By.CSS_SELECTOR,'.jl-language-menu button[data-lang="th"]').click()
+              native_result={"ok":True}
+          except Exception as e:
+              native_result={"ok":False,"error":type(e).__name__,"message":str(e)[:1200]}
+          Path("phase1-live-native-click.json").write_text(json.dumps(native_result,ensure_ascii=False,indent=2),encoding="utf-8")
+          print("NATIVE",json.dumps(native_result,ensure_ascii=False))
+
+          time.sleep(.8)
+          after_native=state("after-native")
+
+          if not native_result["ok"]:
+              d.execute_script("""
+                const el=document.querySelector('.jl-language-menu button[data-lang="th"]');
+                if(el) el.click();
+              """)
+              time.sleep(.8)
+          after_js=state("after-js")
+
+          d.save_screenshot("phase1-live-debug.png")
+          d.quit()
+          PY
+
+      - name: Commit debug artifacts
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase1-live-*.json phase1-live-debug.png
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: capture live language overlay state v5"
+          git push origin HEAD:phase-1-live-language-debug-v5
