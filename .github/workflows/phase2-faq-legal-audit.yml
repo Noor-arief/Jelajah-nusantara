@@ -1,0 +1,92 @@
+name: Phase 2 FAQ Legal Audit
+
+on:
+  push:
+    branches:
+      - phase-2-faq-legal-audit
+    paths:
+      - ".github/workflows/phase2-faq-legal-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-2-faq-legal-audit
+
+      - name: Extract FAQ and legal surfaces
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+
+          root=Path(".")
+          html=(root/"index.html").read_text(encoding="utf-8")
+
+          terms=[
+            "FAQ","Frequently Asked Questions","Terms & Conditions","Terms",
+            "Privacy Policy","Privacy","Affiliate","Disclosure",
+            "Disclaimer","Travel Information","AI","Partnerships",
+            "Contact","Safety Guide"
+          ]
+
+          snippets=[]
+          seen=set()
+          for term in terms:
+            for m in re.finditer(re.escape(term),html,re.I):
+              a=max(0,m.start()-1200); b=min(len(html),m.end()+2500)
+              sn=html[a:b]
+              key=(term,sn[:160])
+              if key in seen: continue
+              seen.add(key)
+              snippets.append({"term":term,"offset":m.start(),"snippet":sn})
+              if len([x for x in snippets if x["term"]==term])>=12: break
+
+          locales={}
+          for p in sorted((root/"locales").glob("*.json")):
+            try:
+              data=json.loads(p.read_text(encoding="utf-8"))
+            except Exception as exc:
+              locales[p.name]={"error":str(exc)}
+              continue
+
+            flat=[]
+            def walk(obj,prefix=""):
+              if isinstance(obj,dict):
+                for k,v in obj.items():
+                  walk(v,f"{prefix}.{k}" if prefix else k)
+              elif isinstance(obj,list):
+                for i,v in enumerate(obj):
+                  walk(v,f"{prefix}[{i}]")
+              else:
+                s=str(obj)
+                if any(t.lower() in (prefix+" "+s).lower() for t in terms):
+                  flat.append({"path":prefix,"value":s})
+            walk(data)
+            locales[p.name]=flat[:200]
+
+          links=[]
+          for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']*)["\'][^>]*>(.*?)</a>',html,re.I|re.S):
+            raw=re.sub(r'<[^>]+>',' ',m.group(2))
+            label=' '.join(raw.split())
+            if any(t.lower() in label.lower() for t in ["faq","privacy","terms","contact","partnership","safety","guide","disclosure","affiliate"]):
+              links.append({"label":label[:160],"href":m.group(1)})
+
+          out={"snippets":snippets,"locales":locales,"links":links}
+          Path("phase2-faq-legal-audit.json").write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding="utf-8")
+          PY
+
+      - name: Commit audit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase2-faq-legal-audit.json
+          git commit -m "chore: audit FAQ and legal surfaces"
+          git push origin HEAD:phase-2-faq-legal-audit
