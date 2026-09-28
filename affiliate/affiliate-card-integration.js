@@ -194,7 +194,22 @@
       const items = bookBox.querySelectorAll("li");
       if (items[0]) {
         items[0].removeAttribute("data-i18n");
-        items[0].textContent = copy.accommodationAvailable;
+        let itemLink = items[0].querySelector(".jl-things-book-stay");
+        if (!itemLink) {
+          items[0].replaceChildren();
+          itemLink = document.createElement("a");
+          itemLink.className = "jl-things-book-stay";
+          items[0].appendChild(itemLink);
+        }
+        itemLink.href = cta.url;
+        itemLink.removeAttribute("target");
+        itemLink.rel = cta.tracked === false ? "noopener noreferrer" : "noopener noreferrer sponsored";
+        itemLink.textContent = copy.accommodationAvailable + " ↗";
+        itemLink.onclick = function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          window.location.assign(cta.url);
+        };
       }
       if (items[1]) {
         items[1].removeAttribute("data-i18n");
