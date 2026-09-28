@@ -1,0 +1,19 @@
+/* JelNusa Phase 4 — contextual partner CTA */
+.region-card-actions .jl-affiliate-card-cta{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  text-decoration:none!important;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.region-card-actions .jl-affiliate-card-cta[data-affiliate-tracked="false"]{
+  opacity:.92;
+}
+@media (max-width:640px){
+  .region-card-actions .jl-affiliate-card-cta{
+    white-space:normal;
+    text-align:center;
+  }
+}
