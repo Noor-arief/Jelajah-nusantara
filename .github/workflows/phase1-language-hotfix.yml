@@ -3,7 +3,7 @@ name: Phase 1 Language Selector Hotfix
 on:
   push:
     branches:
-      - phase-1-language-position-hotfix-v5-final
+      - phase-1-language-reopen-hotfix-v6
     paths:
       - ".github/workflows/phase1-language-hotfix.yml"
       - "tools/phase1_language_hotfix.py"
@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: phase-1-language-position-hotfix-v5-final
+          ref: phase-1-language-reopen-hotfix-v6
           fetch-depth: 1
 
       - name: Apply isolated language overlay wiring
@@ -29,8 +29,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'assets/language-mobile-hotfix.js?v=20260928f' index.html
-          test "$(grep -o 'assets/language-mobile-hotfix.js?v=20260928f' index.html | wc -l)" -eq 1
+          grep -q 'assets/language-mobile-hotfix.js?v=20260928g' index.html
+          test "$(grep -o 'assets/language-mobile-hotfix.js?v=20260928g' index.html | wc -l)" -eq 1
           test "$(grep -o 'https://assistant.vireqo.id/client.js' index.html | wc -l)" -eq 1
           test "$(grep -o 'data-client-id="jelnusa-staging"' index.html | wc -l)" -eq 1
           test "$(find locales -maxdepth 1 -name '*.json' | wc -l)" -eq 8
@@ -47,5 +47,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "fix: wire mobile language position hotfix v5"
-          git push origin HEAD:phase-1-language-position-hotfix-v5-final
+          git commit -m "fix: wire mobile language reopen hotfix v6"
+          git push origin HEAD:phase-1-language-reopen-hotfix-v6
