@@ -27,3 +27,42 @@
   font-weight:700;
   cursor:pointer;
 }
+
+
+/* Phase 6 owner-acceptance polish — merge destination booking information into one OTA block */
+#destinationDetailModal .jl-ota-merged-box{
+  width:100%;
+}
+#destinationDetailModal .jl-ota-provider-list{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+#destinationDetailModal .jl-ota-provider-row{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:4px;
+  line-height:1.5;
+}
+#destinationDetailModal .jl-ota-provider-name{
+  font-weight:700;
+}
+#destinationDetailModal .jl-ota-provider-link{
+  color:inherit;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  font-weight:700;
+  cursor:pointer;
+}
+#destinationDetailModal .jl-ota-provider-link[data-pending="true"]{
+  opacity:.82;
+}
+#destinationDetailModal .affiliate-box[hidden]{
+  display:none!important;
+}
+@media (max-width:640px){
+  #destinationDetailModal .jl-ota-provider-list{
+    gap:8px;
+  }
+}

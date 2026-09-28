@@ -4,66 +4,58 @@
   const MODAL_COPY = {
     id: {
       stayIntro: "Cek pilihan penginapan untuk destinasi ini melalui partner booking kami.",
-      bookIntro: "Akomodasi sudah bisa dicek melalui partner. Aktivitas dan pengalaman lokal akan ditambahkan setelah partner yang sesuai tersedia.",
-      accommodationAvailable: "Akomodasi — Tersedia",
-      activitiesComing: "Aktivitas — Segera Hadir",
-      experiencesComing: "Pengalaman lokal — Segera Hadir",
+      sectionTitle: "Tempat Menginap",
+      providerIntro: "Cek pilihan penginapan untuk destinasi ini melalui partner booking kami.",
+      linkComing: "Link coming soon",
       ctaIntro: "Rencanakan perjalanan Anda dengan itinerary yang sesuai."
     },
     en: {
       stayIntro: "Check accommodation options for this destination through our booking partner.",
-      bookIntro: "Accommodation can now be checked through our partner. Activities and local experiences will be added when suitable partners are available.",
-      accommodationAvailable: "Accommodation — Available",
-      activitiesComing: "Activities — Coming Soon",
-      experiencesComing: "Local experiences — Coming Soon",
+      sectionTitle: "Where to Stay",
+      providerIntro: "Check accommodation options for this destination through our booking partners.",
+      linkComing: "Link coming soon",
       ctaIntro: "Plan your trip with an itinerary that fits your needs."
     },
     zh: {
       stayIntro: "通过我们的预订合作伙伴查看该目的地的住宿选择。",
-      bookIntro: "住宿现已可通过合作伙伴查询。活动和当地体验将在合适的合作伙伴上线后添加。",
-      accommodationAvailable: "住宿 — 可查看",
-      activitiesComing: "活动 — 即将推出",
-      experiencesComing: "当地体验 — 即将推出",
+      sectionTitle: "住宿",
+      providerIntro: "通过我们的预订合作伙伴查看该目的地的住宿选择。",
+      linkComing: "链接即将上线",
       ctaIntro: "使用适合你的行程规划旅行。"
     },
     ja: {
       stayIntro: "予約パートナーを通じて、この目的地の宿泊先を確認できます。",
-      bookIntro: "宿泊先はパートナー経由で確認できます。アクティビティと現地体験は適切なパートナーが利用可能になり次第追加します。",
-      accommodationAvailable: "宿泊 — 利用可能",
-      activitiesComing: "アクティビティ — 近日公開",
-      experiencesComing: "現地体験 — 近日公開",
+      sectionTitle: "宿泊先",
+      providerIntro: "予約パートナーを通じて、この目的地の宿泊先を確認できます。",
+      linkComing: "リンク近日公開",
       ctaIntro: "希望に合った旅程を作成して旅行を計画しましょう。"
     },
     ko: {
       stayIntro: "예약 파트너를 통해 이 여행지의 숙소 옵션을 확인하세요.",
-      bookIntro: "숙소는 파트너를 통해 확인할 수 있습니다. 액티비티와 현지 체험은 적합한 파트너가 준비되면 추가됩니다.",
-      accommodationAvailable: "숙소 — 이용 가능",
-      activitiesComing: "액티비티 — 출시 예정",
-      experiencesComing: "현지 체험 — 출시 예정",
+      sectionTitle: "숙소",
+      providerIntro: "예약 파트너를 통해 이 여행지의 숙소 옵션을 확인하세요.",
+      linkComing: "링크 준비 중",
       ctaIntro: "원하는 일정에 맞춰 여행을 계획하세요."
     },
     ar: {
       stayIntro: "تحقق من خيارات الإقامة لهذه الوجهة عبر شريك الحجز.",
-      bookIntro: "يمكن الآن التحقق من الإقامة عبر الشريك. ستتم إضافة الأنشطة والتجارب المحلية عند توفر شركاء مناسبين.",
-      accommodationAvailable: "الإقامة — متاحة",
-      activitiesComing: "الأنشطة — قريبًا",
-      experiencesComing: "التجارب المحلية — قريبًا",
+      sectionTitle: "أماكن الإقامة",
+      providerIntro: "تحقق من خيارات الإقامة لهذه الوجهة عبر شركاء الحجز.",
+      linkComing: "الرابط قريبًا",
       ctaIntro: "خطط لرحلتك باستخدام برنامج يناسب احتياجاتك."
     },
     nl: {
       stayIntro: "Bekijk accommodaties voor deze bestemming via onze boekingspartner.",
-      bookIntro: "Accommodatie kan nu via onze partner worden bekeken. Activiteiten en lokale ervaringen worden toegevoegd zodra geschikte partners beschikbaar zijn.",
-      accommodationAvailable: "Accommodatie — Beschikbaar",
-      activitiesComing: "Activiteiten — Binnenkort",
-      experiencesComing: "Lokale ervaringen — Binnenkort",
+      sectionTitle: "Verblijven",
+      providerIntro: "Bekijk accommodaties voor deze bestemming via onze boekingspartners.",
+      linkComing: "Link binnenkort",
       ctaIntro: "Plan je reis met een route die bij je past."
     },
     th: {
       stayIntro: "ตรวจสอบตัวเลือกที่พักสำหรับจุดหมายนี้ผ่านพาร์ทเนอร์การจองของเรา",
-      bookIntro: "ขณะนี้สามารถตรวจสอบที่พักผ่านพาร์ทเนอร์ได้แล้ว กิจกรรมและประสบการณ์ท้องถิ่นจะเพิ่มเมื่อมีพาร์ทเนอร์ที่เหมาะสม",
-      accommodationAvailable: "ที่พัก — พร้อมใช้งาน",
-      activitiesComing: "กิจกรรม — เร็ว ๆ นี้",
-      experiencesComing: "ประสบการณ์ท้องถิ่น — เร็ว ๆ นี้",
+      sectionTitle: "ที่พัก",
+      providerIntro: "ตรวจสอบตัวเลือกที่พักสำหรับจุดหมายนี้ผ่านพาร์ทเนอร์การจองของเรา",
+      linkComing: "ลิงก์เร็ว ๆ นี้",
       ctaIntro: "วางแผนทริปด้วยแผนการเดินทางที่เหมาะกับคุณ"
     }
   };
@@ -152,62 +144,81 @@
 
     if (boxes[0]) {
       const stayBox = boxes[0];
+      stayBox.classList.add("jl-ota-merged-box");
+
+      const heading = stayBox.querySelector("h2, h3, h4");
+      if (heading) {
+        heading.removeAttribute("data-i18n");
+        heading.textContent = copy.sectionTitle;
+      }
+
       const p = stayBox.querySelector("p");
       if (p) {
         p.removeAttribute("data-i18n");
-        p.textContent = copy.stayIntro;
+        p.textContent = copy.providerIntro;
       }
 
-      let link = stayBox.querySelector(".jl-destination-stay-cta");
-      const old = stayBox.querySelector(".affiliate-coming-soon");
-      if (!link) {
-        link = document.createElement("a");
-        link.className = "affiliate-coming-soon jl-destination-stay-cta";
-        if (old) old.replaceWith(link);
-        else stayBox.appendChild(link);
+      stayBox.querySelector(".affiliate-coming-soon")?.remove();
+      stayBox.querySelector(".jl-destination-stay-cta")?.remove();
+
+      let providerList = stayBox.querySelector(".jl-ota-provider-list");
+      if (!providerList) {
+        providerList = document.createElement("div");
+        providerList.className = "jl-ota-provider-list";
+        stayBox.appendChild(providerList);
       }
-      link.href = cta.url;
-      link.target = "_blank";
-      link.rel = cta.tracked === false ? "noopener noreferrer" : "noopener noreferrer sponsored";
-      link.dataset.affiliateDestination = destination;
-      link.dataset.affiliateProvider = cta.provider;
-      link.setAttribute("aria-label", cta.label + " — " + destination);
-      link.innerHTML = '<span aria-hidden="true">🏨</span> <span class="jl-modal-stay-label"></span> <span aria-hidden="true">↗</span>';
-      link.querySelector(".jl-modal-stay-label").textContent = cta.label;
-      link.onclick = null;
+      providerList.replaceChildren();
+
+      ["booking", "agoda", "traveloka"].forEach(function (providerKey) {
+        const providerNames = {
+          booking: "Booking.com",
+          agoda: "Agoda",
+          traveloka: "Traveloka"
+        };
+
+        const result = window.JelNusaAffiliate.buildUrl({
+          destination: destination,
+          productType: "stay",
+          provider: providerKey
+        });
+
+        const row = document.createElement("div");
+        row.className = "jl-ota-provider-row";
+
+        const name = document.createElement("span");
+        name.className = "jl-ota-provider-name";
+        name.textContent = providerNames[providerKey];
+
+        const link = document.createElement("a");
+        link.className = "jl-ota-provider-link";
+        link.textContent = copy.linkComing;
+        link.dataset.provider = providerKey;
+        link.dataset.destination = destination;
+
+        if (result && result.url) {
+          link.href = result.url;
+          link.target = "_blank";
+          link.rel = result.tracked === false ? "noopener noreferrer" : "noopener noreferrer sponsored";
+          link.dataset.pending = "false";
+        } else {
+          link.href = "#";
+          link.dataset.pending = "true";
+          link.setAttribute("aria-label", providerNames[providerKey] + " — " + copy.linkComing);
+          link.addEventListener("click", function (event) {
+            event.preventDefault();
+          });
+        }
+
+        row.appendChild(name);
+        row.appendChild(document.createTextNode(" : "));
+        row.appendChild(link);
+        providerList.appendChild(row);
+      });
     }
 
     if (boxes[1]) {
-      const bookBox = boxes[1];
-      const p = bookBox.querySelector("p");
-      if (p) {
-        p.removeAttribute("data-i18n");
-        p.textContent = copy.bookIntro;
-      }
-      const items = bookBox.querySelectorAll("li");
-      if (items[0]) {
-        items[0].removeAttribute("data-i18n");
-        let itemLink = items[0].querySelector(".jl-things-book-stay");
-        if (!itemLink) {
-          items[0].replaceChildren();
-          itemLink = document.createElement("a");
-          itemLink.className = "jl-things-book-stay";
-          items[0].appendChild(itemLink);
-        }
-        itemLink.href = cta.url;
-        itemLink.target = "_blank";
-        itemLink.rel = cta.tracked === false ? "noopener noreferrer" : "noopener noreferrer sponsored";
-        itemLink.textContent = copy.accommodationAvailable + " ↗";
-        itemLink.onclick = null;
-      }
-      if (items[1]) {
-        items[1].removeAttribute("data-i18n");
-        items[1].textContent = copy.activitiesComing;
-      }
-      if (items[2]) {
-        items[2].removeAttribute("data-i18n");
-        items[2].textContent = copy.experiencesComing;
-      }
+      boxes[1].hidden = true;
+      boxes[1].setAttribute("aria-hidden", "true");
     }
 
     const bottom = modal.querySelector(".destination-detail-cta");
