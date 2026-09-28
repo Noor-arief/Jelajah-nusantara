@@ -1,4 +1,4 @@
-/* Phase 1 targeted hotfix v5: mobile language selector viewport positioning only. */
+/* Phase 1 targeted hotfix v6: mobile language selector reopen-safe positioning. */
 (function () {
   "use strict";
 
@@ -21,7 +21,7 @@
 
   function portalMenuForMobile() {
     const root = getRoot();
-    const menu = root ? root.querySelector(".jl-language-menu") : getMenu();
+    const menu = (root && root.querySelector(".jl-language-menu")) || getMenu();
     if (!root || !menu || window.innerWidth > MOBILE_BP) return;
 
     if (!originalParent) {
@@ -104,33 +104,32 @@
     setTimeout(closeLanguageUi, 180);
   }
 
-  function bindMobilePositioning() {
-    const root = getRoot();
-    if (!root || root.dataset.jlViewportBound === "1") return;
+  function schedulePortalAfterTrigger() {
+    requestAnimationFrame(function () {
+      const root = getRoot();
+      if (root && root.classList.contains("is-open")) portalMenuForMobile();
+    });
+    setTimeout(function () {
+      const root = getRoot();
+      if (root && root.classList.contains("is-open")) portalMenuForMobile();
+    }, 30);
+  }
 
-    root.dataset.jlViewportBound = "1";
-
+  const rootObserverTarget = getRoot();
+  if (rootObserverTarget) {
     const observer = new MutationObserver(function () {
-      if (window.innerWidth <= MOBILE_BP && root.classList.contains("is-open")) {
+      if (window.innerWidth <= MOBILE_BP && rootObserverTarget.classList.contains("is-open")) {
         portalMenuForMobile();
       }
     });
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-
-    const trigger = root.querySelector(".jl-language-trigger");
-    if (trigger) {
-      trigger.addEventListener("click", function () {
-        requestAnimationFrame(function () {
-          if (root.classList.contains("is-open")) portalMenuForMobile();
-        });
-        setTimeout(function () {
-          if (root.classList.contains("is-open")) portalMenuForMobile();
-        }, 30);
-      }, true);
-    }
+    observer.observe(rootObserverTarget, { attributes: true, attributeFilter: ["class"] });
   }
 
   document.addEventListener("click", function (event) {
+    if (event.target.closest(".jl-language-trigger")) {
+      schedulePortalAfterTrigger();
+      return;
+    }
     const option = event.target.closest(".jl-language-menu button[data-lang]");
     if (!option) return;
     queueClose();
@@ -149,13 +148,10 @@
     }
   });
 
-  bindMobilePositioning();
-
   if (!bindI18nCleanup()) {
     let attempts = 0;
     const timer = setInterval(function () {
       attempts += 1;
-      bindMobilePositioning();
       if (bindI18nCleanup() || attempts >= 20) clearInterval(timer);
     }, 250);
   }
