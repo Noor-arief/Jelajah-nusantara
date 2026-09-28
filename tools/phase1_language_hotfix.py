@@ -3,7 +3,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
-MARKER = '<script defer src="assets/language-mobile-hotfix.js?v=20260928"></script>'
+OLD = '<script defer src="assets/language-mobile-hotfix.js?v=20260928"></script>'
+NEW = '<script defer src="assets/language-mobile-hotfix.js?v=20260928c"></script>'
 
 def main():
     html = INDEX.read_text(encoding="utf-8")
@@ -11,6 +12,7 @@ def main():
     required = [
         'id="jelLanguageSwitcher"',
         '.jl-language-backdrop',
+        'id="navBackdrop"',
         'assets/mobile-recovery.css?v=20260928',
         'https://assistant.vireqo.id/client.js',
         'data-client-id="jelnusa-staging"',
@@ -19,18 +21,19 @@ def main():
         if token not in html:
             raise RuntimeError(f"Required protected token missing: {token}")
 
-    if MARKER not in html:
+    if OLD in html:
+        html = html.replace(OLD, NEW, 1)
+    elif NEW not in html:
         closing = html.rfind("</body>")
         if closing < 0:
             raise RuntimeError("Missing </body>; refusing unsafe patch")
-        html = html[:closing] + MARKER + "\n" + html[closing:]
+        html = html[:closing] + NEW + "\n" + html[closing:]
 
-    if html.count(MARKER) != 1:
+    if html.count(NEW) != 1:
         raise RuntimeError("Language hotfix marker must occur exactly once")
 
     INDEX.write_text(html, encoding="utf-8")
-
-    print("PASS: isolated language selector hotfix wired exactly once")
+    print("PASS: language hotfix v3 wired with cache-busting version")
 
 if __name__ == "__main__":
     try:
