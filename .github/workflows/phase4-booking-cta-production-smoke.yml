@@ -63,9 +63,11 @@ jobs:
               time.sleep(.2)
               if len(d.window_handles)>len(before): break
           assert len(d.window_handles)==len(before)+1,(before,d.window_handles)
-          d.close()
-          d.switch_to.window(before[0])
+          d.quit()
 
+          d=make_driver()
+          d.get('https://noor-arief.github.io/Jelajah-nusantara/')
+          time.sleep(5)
           d.execute_script("openDestination('Raja Ampat')");time.sleep(.5)
           modal_state=d.execute_script("""
             const m=document.getElementById('destinationDetailModal');
