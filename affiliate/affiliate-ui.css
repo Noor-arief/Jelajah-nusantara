@@ -46,3 +46,11 @@
     width:100%;
   }
 }
+
+#destinationDetailModal .jl-things-book-stay{
+  color:inherit;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  font-weight:700;
+  cursor:pointer;
+}
