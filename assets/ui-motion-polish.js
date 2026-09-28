@@ -486,6 +486,22 @@
     },true);
   }
 
+  function setupAnalyticsLoader(){
+    if(document.querySelector('script[data-jl-analytics="config"]') || window.JELNUSA_ANALYTICS_ID!==undefined) return;
+
+    const config=document.createElement("script");
+    config.src="/assets/analytics-config.js";
+    config.dataset.jlAnalytics="config";
+    config.onload=function(){
+      if(document.querySelector('script[data-jl-analytics="loader"]')) return;
+      const loader=document.createElement("script");
+      loader.src="/assets/analytics.js";
+      loader.dataset.jlAnalytics="loader";
+      document.head.appendChild(loader);
+    };
+    document.head.appendChild(config);
+  }
+
   function init(){
     document.documentElement.classList.add("jl-phase15-motion");
     setupSectionMotion();
@@ -493,6 +509,7 @@
     setupFooterCleanup();
     setupMobileFooterAccordion();
     setupNavigationPolish();
+    setupAnalyticsLoader();
   }
 
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init,{once:true});
