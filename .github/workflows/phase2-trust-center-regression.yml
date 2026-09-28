@@ -1,0 +1,190 @@
+name: Phase 2 Trust Center Regression
+
+on:
+  push:
+    branches:
+      - phase-2-faq-legal-implementation
+    paths:
+      - ".github/workflows/phase2-trust-center-regression.yml"
+      - "assets/trust-center.css"
+      - "assets/trust-center.js"
+      - "index.html"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-2-faq-legal-implementation
+
+      - run: python -m pip install selenium --quiet
+
+      - name: Start local site
+        shell: bash
+        run: |
+          python -m http.server 8080 >/tmp/jelnusa-http.log 2>&1 &
+          echo $! >/tmp/jelnusa-http.pid
+          sleep 2
+
+      - name: Validate Trust Center and 8-language behavior
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          expected_titles={
+            "en":("FAQ","Affiliate Disclosure","Travel & AI Disclaimer"),
+            "id":("FAQ","Pengungkapan Afiliasi","Disclaimer Perjalanan & AI"),
+            "zh":("常见问题","联盟营销披露","旅行与 AI 免责声明"),
+            "ja":("よくある質問","アフィリエイト開示","旅行・AI 免責事項"),
+            "ko":("자주 묻는 질문","제휴 링크 공개","여행 및 AI 면책 안내"),
+            "ar":("الأسئلة الشائعة","إفصاح التسويق بالعمولة","إخلاء مسؤولية السفر والذكاء الاصطناعي"),
+            "nl":("Veelgestelde vragen","Affiliateverklaring","Reis- & AI-disclaimer"),
+            "th":("คำถามที่พบบ่อย","การเปิดเผยลิงก์แอฟฟิลิเอต","ข้อจำกัดความรับผิดด้านการเดินทางและ AI"),
+          }
+
+          opts=Options()
+          opts.binary_location=shutil.which("google-chrome")
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+
+          d=webdriver.Chrome(options=opts)
+          d.get("http://127.0.0.1:8080/")
+          time.sleep(3)
+
+          base=d.execute_script("""
+            return {
+              trustCss:[...document.styleSheets].some(s=>String(s.href||'').includes('trust-center.css')),
+              trustJs:[...document.scripts].some(s=>String(s.src||'').includes('trust-center.js')),
+              faq:!!document.getElementById('jl-faq'),
+              affiliate:!!document.getElementById('jl-affiliate'),
+              disclaimer:!!document.getElementById('jl-disclaimer'),
+              oldEmail:document.documentElement.innerHTML.includes('arifmuhamad942@gmail.com'),
+              newEmail:document.documentElement.innerHTML.includes('arifmuhamad94@gmail.com'),
+              termsAddendum:!!document.querySelector('.jl-terms-ai-addendum'),
+              privacyAddendum:!!document.querySelector('.jl-privacy-ai-addendum'),
+              scrollWidth:document.documentElement.scrollWidth,
+              innerWidth:innerWidth
+            };
+          """)
+          print("BASE",json.dumps(base,ensure_ascii=False))
+          assert base["trustCss"] and base["trustJs"],base
+          assert base["faq"] and base["affiliate"] and base["disclaimer"],base
+          assert not base["oldEmail"] and base["newEmail"],base
+          assert base["termsAddendum"] and base["privacyAddendum"],base
+          assert base["scrollWidth"]<=base["innerWidth"]+2,base
+
+          for lang in ["en","id","zh","ja","ko","ar","nl","th"]:
+            if d.execute_script("return document.documentElement.lang") != lang:
+              d.find_element(By.CSS_SELECTOR,'.jl-language-trigger').click()
+              time.sleep(.2)
+              d.find_element(By.CSS_SELECTOR,f'.jl-language-menu button[data-lang="{lang}"]').click()
+              time.sleep(.4)
+
+            s=d.execute_script("""
+              const footer=document.querySelector('footer');
+              const faq=footer.querySelector('[data-i18n="FAQ"]');
+              const privacy=footer.querySelector('[data-i18n="Privacy Policy"]');
+              const partner=footer.querySelector('[data-i18n="Partnerships"]');
+              const aff=footer.querySelector('[data-jl-trust="affiliate"]');
+              const disc=footer.querySelector('[data-jl-trust="disclaimer"]');
+              const titles=[
+                document.querySelector('#jl-faq h2')?.textContent.trim(),
+                document.querySelector('#jl-affiliate h2')?.textContent.trim(),
+                document.querySelector('#jl-disclaimer h2')?.textContent.trim()
+              ];
+              return {
+                htmlLang:document.documentElement.lang,
+                titles,
+                faqHidden:faq?.hidden,
+                faqHref:faq?.getAttribute('href'),
+                privacyHidden:privacy?.hidden,
+                partnerHidden:partner?.hidden,
+                affiliateText:aff?.textContent.trim(),
+                disclaimerText:disc?.textContent.trim(),
+                termsText:document.querySelector('.jl-terms-ai-addendum')?.innerText||'',
+                privacyText:document.querySelector('.jl-privacy-ai-addendum')?.innerText||'',
+                faqCount:document.querySelectorAll('#jl-faq .jl-trust-item').length,
+                dir:document.documentElement.dir||''
+              };
+            """)
+            print(lang,json.dumps(s,ensure_ascii=False))
+            assert s["htmlLang"]==lang,(lang,s)
+            assert tuple(s["titles"])==expected_titles[lang],(lang,s)
+            assert s["faqHidden"] is False and s["faqHref"]=="#faq",(lang,s)
+            assert s["privacyHidden"] is False,(lang,s)
+            assert s["partnerHidden"] is False,(lang,s)
+            assert s["faqCount"]==8,(lang,s)
+            assert s["termsText"] and s["privacyText"],(lang,s)
+
+          # FAQ opens and closes
+          d.find_element(By.CSS_SELECTOR,'footer [data-i18n="FAQ"]').click()
+          time.sleep(.2)
+          assert d.execute_script("return document.getElementById('jl-faq').classList.contains('is-open')")
+          d.find_element(By.CSS_SELECTOR,'#jl-faq [data-jl-close]').click()
+          time.sleep(.15)
+
+          # Affiliate opens
+          d.find_element(By.CSS_SELECTOR,'footer [data-jl-trust="affiliate"]').click()
+          time.sleep(.15)
+          assert d.execute_script("return document.getElementById('jl-affiliate').classList.contains('is-open')")
+          d.find_element(By.CSS_SELECTOR,'#jl-affiliate [data-jl-close]').click()
+
+          # Disclaimer opens
+          d.find_element(By.CSS_SELECTOR,'footer [data-jl-trust="disclaimer"]').click()
+          time.sleep(.15)
+          assert d.execute_script("return document.getElementById('jl-disclaimer').classList.contains('is-open')")
+          d.find_element(By.CSS_SELECTOR,'#jl-disclaimer [data-jl-close]').click()
+
+          d.quit()
+          print("PASS: Phase 2 Trust Center 8-language regression")
+          PY
+
+      - name: Verify live-origin NUSA remains isolated and functional
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          opts=Options()
+          opts.binary_location=shutil.which("google-chrome")
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+          d=webdriver.Chrome(options=opts)
+          d.get("https://noor-arief.github.io/Jelajah-nusantara/")
+          time.sleep(4)
+          s=d.execute_script("""
+            const h=document.getElementById('vireqo-ai-jelnusa-staging');
+            const r=h&&h.shadowRoot;
+            return {
+              host:!!h,
+              shadow:!!r,
+              launcher:!!(r&&r.querySelector('.vireqo-ai-launcher')),
+              widget:!!(r&&r.querySelector('.vireqo-ai-widget')),
+              client:[...document.scripts].some(x=>String(x.src||'').includes('assistant.vireqo.id/client.js'))
+            };
+          """)
+          print(json.dumps(s))
+          assert all(s.values()),s
+          d.quit()
+          print("PASS: NUSA live-origin baseline unaffected")
+          PY
+
+      - name: Stop local
+        if: always()
+        run: |
+          if [ -f /tmp/jelnusa-http.pid ]; then kill "$(cat /tmp/jelnusa-http.pid)" || true; fi
