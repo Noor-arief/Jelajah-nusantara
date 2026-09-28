@@ -1,0 +1,155 @@
+{
+  "desktop": {
+    "base": {
+      "affiliateCardCount": 35,
+      "affiliateDisclosure": true,
+      "bodyWidth": 1425,
+      "cardCount": 35,
+      "dir": "ltr",
+      "disclaimer": true,
+      "faq": true,
+      "lang": "en",
+      "newEmail": true,
+      "nusaHost": true,
+      "nusaShadow": true,
+      "oldEmail": false,
+      "privacy": true,
+      "scrollWidth": 1425,
+      "terms": true,
+      "width": 1440
+    },
+    "extra": {
+      "affiliateJs": true,
+      "hasMotionClass": true,
+      "trustCss": true,
+      "visibleCards": 35
+    }
+  },
+  "mobile": {
+    "base": {
+      "affiliateCardCount": 35,
+      "affiliateDisclosure": true,
+      "bodyWidth": 815,
+      "cardCount": 35,
+      "dir": "ltr",
+      "disclaimer": true,
+      "faq": true,
+      "lang": "en",
+      "newEmail": true,
+      "nusaHost": true,
+      "nusaShadow": true,
+      "oldEmail": false,
+      "privacy": true,
+      "scrollWidth": 485,
+      "terms": true,
+      "width": 500
+    },
+    "extra": {
+      "cardWidths": [
+        453,
+        453,
+        453,
+        453,
+        453
+      ],
+      "inputFont": "16px",
+      "languageTrigger": true,
+      "viewportWidth": 500
+    }
+  },
+  "languages": {
+    "id": {
+      "label": "Cari Penginapan",
+      "dir": "ltr"
+    },
+    "en": {
+      "label": "Find Stays",
+      "dir": "ltr"
+    },
+    "zh": {
+      "label": "查找住宿",
+      "dir": "ltr"
+    },
+    "ja": {
+      "label": "宿泊先を探す",
+      "dir": "ltr"
+    },
+    "ko": {
+      "label": "숙소 찾기",
+      "dir": "ltr"
+    },
+    "ar": {
+      "label": "ابحث عن إقامة",
+      "dir": "rtl"
+    },
+    "nl": {
+      "label": "Vind verblijf",
+      "dir": "ltr"
+    },
+    "th": {
+      "label": "ค้นหาที่พัก",
+      "dir": "ltr"
+    }
+  },
+  "trust": {
+    "8_language_trust": true
+  },
+  "affiliate": {
+    "card": {
+      "href": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Raja%20Ampat",
+      "onclick": null,
+      "target": "_blank",
+      "text": "🏨\nFind Stays\n↗"
+    },
+    "modal": {
+      "accommodation": 1,
+      "bookingCount": 1,
+      "bottomDup": 0,
+      "links": [
+        {
+          "className": "jl-things-book-stay",
+          "href": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Raja%20Ampat",
+          "target": "_blank",
+          "text": "Accommodation — Available ↗"
+        }
+      ],
+      "open": true,
+      "topDup": 0
+    },
+    "resolver": {
+      "code": 302,
+      "location": "https://www.booking.com/searchresults.html?ss=Raja+Ampat",
+      "tracked": false
+    }
+  },
+  "nusa": {
+    "close_reset": true,
+    "conversation": {
+      "reply": "Baik, tidak apa-apa. Tentu, kita langsung susun gambaran perjalanan Raja Ampat 4 hari. Raja Ampat ada di Papua dan umumnya diakses lewat Sorong, jadi hari pertama dan terakhir biasanya banyak terpakai untuk perjalanan dan transfer. Karena itu, 4 hari terasa cukup singkat—cukup untuk menikmati satu area utama saja, bukan menjelajah banyak pulau.\n\nGambaran itinerary 4 hari\n\nHari 1: Tiba di Sorong, lanjut transfer ke area Raja Ampat (umumnya ke Waisai atau langsung ke resort/penginapan pilihan). Sisa hari untuk check-in, istirahat, dan menikmati sunset. Belum ada aktivitas berat.\n\nHari 2: Fokus snorkeling atau diving di spot sekitar. Raja Ampat terkenal dengan biodiversitas lautnya, jadi ini hari terbaik untuk menikmati bawah laut. Kalau tidak diving, snorkeling tetap memuaskan.\n\nHari 3: Isla",
+      "ctas": [
+        {
+          "label": "Cari Penginapan · Raja Ampat",
+          "url": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Raja+Ampat",
+          "provider": "booking",
+          "product_type": "stay",
+          "destination": "Raja Ampat",
+          "tracked": false
+        },
+        {
+          "label": "Cari Penginapan · Bali",
+          "url": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Bali",
+          "provider": "booking",
+          "product_type": "stay",
+          "destination": "Bali",
+          "tracked": false
+        }
+      ]
+    }
+  },
+  "tenant_isolation": {
+    "wrong_tenant": 404,
+    "unknown_destination": 404,
+    "unsupported_product": 400,
+    "unknown_client_chat": 404
+  }
+}
