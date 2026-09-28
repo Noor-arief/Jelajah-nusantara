@@ -1,0 +1,88 @@
+name: Phase 1 Language Reopen Debug v6
+
+on:
+  push:
+    branches:
+      - phase-1-language-reopen-debug-v6
+    paths:
+      - ".github/workflows/phase1-language-reopen-debug-v6.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1-language-reopen-debug-v6
+
+      - run: python -m pip install selenium --quiet
+
+      - name: Reproduce open-select-reopen on live production
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          opts=Options()
+          opts.binary_location=shutil.which("google-chrome")
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+
+          d=webdriver.Chrome(options=opts)
+          d.get("https://noor-arief.github.io/Jelajah-nusantara/")
+          time.sleep(2)
+
+          def snap(name):
+              s=d.execute_script("""
+              const p=s=>{const e=document.querySelector(s);if(!e)return null;const c=getComputedStyle(e),r=e.getBoundingClientRect();return {
+                sel:s,cls:e.className,style:e.getAttribute('style'),parent:e.parentElement&&e.parentElement.tagName,
+                display:c.display,visibility:c.visibility,opacity:c.opacity,pointer:c.pointerEvents,
+                top:r.top,bottom:r.bottom,height:r.height,z:c.zIndex,aria:e.getAttribute('aria-expanded')
+              }};
+              return {
+                lang:document.documentElement.lang,
+                root:p('#jelLanguageSwitcher'),
+                trigger:p('.jl-language-trigger'),
+                menu:p('.jl-language-menu'),
+                backdrop:p('.jl-language-backdrop'),
+                bodyStyle:document.body.getAttribute('style')
+              };
+              """)
+              Path(f"phase1-reopen-{name}.json").write_text(json.dumps(s,ensure_ascii=False,indent=2),encoding="utf-8")
+              print(name,json.dumps(s,ensure_ascii=False))
+              return s
+
+          snap("initial")
+          d.find_element(By.CSS_SELECTOR,".jl-language-trigger").click()
+          time.sleep(.5)
+          snap("open1")
+          d.find_element(By.CSS_SELECTOR,'.jl-language-menu button[data-lang="id"]').click()
+          time.sleep(.8)
+          snap("after-id")
+          d.find_element(By.CSS_SELECTOR,".jl-language-trigger").click()
+          time.sleep(.5)
+          snap("open2")
+
+          d.save_screenshot("phase1-reopen-debug.png")
+          d.quit()
+          PY
+
+      - name: Commit debug artifacts
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase1-reopen-*.json phase1-reopen-debug.png
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: capture second-open language state"
+          git push origin HEAD:phase-1-language-reopen-debug-v6
