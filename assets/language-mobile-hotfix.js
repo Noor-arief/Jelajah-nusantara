@@ -1,5 +1,5 @@
-/* Phase 1 targeted hotfix v2: mobile language selector cleanup only.
-   Scope: close stale language selector/backdrop after a language is selected. */
+/* Phase 1 targeted hotfix v3: mobile language selector cleanup only.
+   Scope: clear both language and mobile-nav overlay states after language selection. */
 (function () {
   "use strict";
 
@@ -8,21 +8,32 @@
 
   function closeLanguageUi() {
     const root = document.querySelector(ROOT);
-    if (!root) return;
+    if (root) {
+      root.classList.remove("is-open");
 
-    root.classList.remove("is-open");
+      const trigger = root.querySelector(".jl-language-trigger");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
 
-    const trigger = root.querySelector(".jl-language-trigger");
-    if (trigger) trigger.setAttribute("aria-expanded", "false");
-
-    const menu = root.querySelector(".jl-language-menu");
-    if (menu && window.innerWidth <= MOBILE_BP) {
-      menu.style.display = "none";
-      menu.style.pointerEvents = "none";
+      const menu = root.querySelector(".jl-language-menu");
+      if (menu && window.innerWidth <= MOBILE_BP) {
+        menu.style.display = "none";
+        menu.style.pointerEvents = "none";
+      }
     }
 
-    const backdrop = document.querySelector(".jl-language-backdrop");
-    if (backdrop) backdrop.classList.remove("is-visible");
+    const languageBackdrop = document.querySelector(".jl-language-backdrop");
+    if (languageBackdrop) languageBackdrop.classList.remove("is-visible");
+
+    /* Also clear the independent hamburger-nav overlay state.
+       This does not change layout; it only removes stale open-state classes. */
+    const primaryNav = document.getElementById("primaryNav");
+    if (primaryNav) primaryNav.classList.remove("is-open");
+
+    const navBackdrop = document.getElementById("navBackdrop");
+    if (navBackdrop) navBackdrop.classList.remove("is-open");
+
+    const navToggle = document.querySelector(".nav-toggle");
+    if (navToggle) navToggle.setAttribute("aria-expanded", "false");
 
     document.body.style.overflow = "";
   }
@@ -30,9 +41,10 @@
   function queueClose() {
     requestAnimationFrame(closeLanguageUi);
     setTimeout(closeLanguageUi, 80);
+    setTimeout(closeLanguageUi, 180);
   }
 
-  /* Capture phase is intentional: the legacy selector handler may stop bubbling. */
+  /* Capture phase is intentional: legacy handlers may stop bubbling. */
   document.addEventListener("click", function (event) {
     const option = event.target.closest(
       ROOT + ' .jl-language-menu button[data-lang]'
@@ -41,7 +53,6 @@
     queueClose();
   }, true);
 
-  /* Keyboard/programmatic language changes get the same cleanup. */
   function bindI18nCleanup() {
     if (!window.i18next || typeof window.i18next.on !== "function") return false;
     window.i18next.on("languageChanged", queueClose);
