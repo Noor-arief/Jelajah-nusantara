@@ -335,11 +335,14 @@
       if(label==="budget planner"){
         a.href="/guides/#budget-smart";
       }
+      if(label==="faq"){
+        a.href="/faq/";
+      }
     });
 
     /* Hide placeholder/deferred navigation instead of leaving dead links. */
     const deferred=new Set([
-      "blog","photo gallery","tools","packing list","faq",
+      "blog","photo gallery","tools","packing list",
       "privacy policy","partnerships"
     ]);
     links.forEach(a=>{
