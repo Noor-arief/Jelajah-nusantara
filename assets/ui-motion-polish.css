@@ -1,0 +1,116 @@
+/* JelNusa Phase 1.5 — isolated UI/UX + motion polish
+   Frontend-only. No content, routing, assistant backend, or tenant logic changes. */
+
+:root{
+  --jl-motion-fast:160ms;
+  --jl-motion-base:260ms;
+  --jl-motion-slow:480ms;
+  --jl-motion-ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* Subtle hierarchy consistency */
+.region-card,
+.planning-card,
+.pillar-card{
+  transition:
+    transform var(--jl-motion-base) var(--jl-motion-ease),
+    box-shadow var(--jl-motion-base) var(--jl-motion-ease),
+    border-color var(--jl-motion-base) ease;
+  will-change:transform;
+}
+
+@media (hover:hover) and (pointer:fine){
+  .region-card:hover,
+  .planning-card:hover,
+  .pillar-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 16px 34px rgba(15,76,76,.12);
+  }
+
+  .region-card:hover img{
+    transform:scale(1.018);
+  }
+}
+
+.region-card img{
+  transition:transform var(--jl-motion-slow) var(--jl-motion-ease);
+}
+
+.region-explore,
+.region-tab,
+.btn,
+.nav-cta,
+.jl-language-trigger{
+  transition:
+    transform var(--jl-motion-fast) var(--jl-motion-ease),
+    box-shadow var(--jl-motion-base) var(--jl-motion-ease),
+    background-color var(--jl-motion-base) ease,
+    border-color var(--jl-motion-base) ease;
+}
+
+.region-explore:active,
+.region-tab:active,
+.btn:active,
+.nav-cta:active,
+.jl-language-trigger:active{
+  transform:scale(.975);
+}
+
+/* Section-entry motion. JS adds .jl-motion-target / .jl-motion-visible. */
+.jl-motion-target{
+  opacity:0;
+  transform:translateY(16px);
+  transition:
+    opacity var(--jl-motion-slow) var(--jl-motion-ease),
+    transform var(--jl-motion-slow) var(--jl-motion-ease);
+}
+
+.jl-motion-target.jl-motion-visible{
+  opacity:1;
+  transform:none;
+}
+
+.region-results .region-card.jl-motion-target:nth-child(2n){transition-delay:35ms}
+.region-results .region-card.jl-motion-target:nth-child(3n){transition-delay:70ms}
+
+/* Language selector gets feedback, not decorative looping motion. */
+#jelLanguageSwitcher.is-open .jl-language-trigger{
+  transform:translateY(1px);
+  box-shadow:0 8px 22px rgba(15,76,76,.12);
+}
+
+.jl-language-menu button[data-lang]{
+  transition:background-color var(--jl-motion-fast) ease, transform var(--jl-motion-fast) var(--jl-motion-ease);
+}
+.jl-language-menu button[data-lang]:active{transform:scale(.985)}
+
+/* Tap feedback on mobile cards without layout shifts. */
+@media (hover:none), (pointer:coarse){
+  .region-card:active,
+  .planning-card:active,
+  .pillar-card:active{
+    transform:scale(.992);
+  }
+}
+
+/* Accessibility/performance */
+@media (prefers-reduced-motion:reduce){
+  .jl-motion-target,
+  .jl-motion-target.jl-motion-visible,
+  .region-card,
+  .planning-card,
+  .pillar-card,
+  .region-card img,
+  .region-explore,
+  .region-tab,
+  .btn,
+  .nav-cta,
+  .jl-language-trigger,
+  .jl-language-menu button[data-lang]{
+    animation:none!important;
+    transition:none!important;
+    transform:none!important;
+    scroll-behavior:auto!important;
+  }
+  .jl-motion-target{opacity:1!important}
+}

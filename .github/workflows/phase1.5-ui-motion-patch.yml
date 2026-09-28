@@ -1,0 +1,52 @@
+name: Phase 1.5 UI Motion Patch
+
+on:
+  push:
+    branches:
+      - phase-1.5-ui-motion-polish
+    paths:
+      - ".github/workflows/phase1.5-ui-motion-patch.yml"
+      - "tools/phase15_motion_patch.py"
+      - "assets/ui-motion-polish.css"
+      - "assets/ui-motion-polish.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1.5-ui-motion-polish
+          fetch-depth: 1
+
+      - name: Apply isolated Phase 1.5 asset wiring
+        run: python tools/phase15_motion_patch.py
+
+      - name: Validate protected scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(grep -o 'assets/ui-motion-polish.css?v=20260928a' index.html | wc -l)" -eq 1
+          test "$(grep -o 'assets/ui-motion-polish.js?v=20260928a' index.html | wc -l)" -eq 1
+          test "$(grep -o 'https://assistant.vireqo.id/client.js' index.html | wc -l)" -eq 1
+          test "$(grep -o 'data-client-id="jelnusa-staging"' index.html | wc -l)" -eq 1
+          test "$(find locales -maxdepth 1 -name '*.json' | wc -l)" -eq 8
+          git diff --check
+
+      - name: Commit patched index
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No index change required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "feat: wire isolated Phase 1.5 motion assets"
+          git push origin HEAD:phase-1.5-ui-motion-polish
