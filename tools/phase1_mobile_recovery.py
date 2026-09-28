@@ -265,6 +265,16 @@ CSS = r'''/* JelNusa Phase 1 — canonical mobile recovery layer
 
 def main():
     html = INDEX.read_text(encoding="utf-8")
+
+    # Remove the superseded inline recovery block if a previous transport-safe patch added it.
+    inline_marker = '<style id="jelnusa-phase1-mobile-recovery-v1">'
+    inline_start = html.find(inline_marker)
+    if inline_start >= 0:
+        inline_end = html.find("</style>", inline_start)
+        if inline_end < 0:
+            raise RuntimeError("Unclosed superseded inline mobile recovery block")
+        html = html[:inline_start] + html[inline_end + len("</style>"):]
+
     original_size = len(html)
 
     required_before = {
