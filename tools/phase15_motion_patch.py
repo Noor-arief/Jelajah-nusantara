@@ -4,7 +4,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[1]
 INDEX=ROOT/"index.html"
 CSS='<link rel="stylesheet" href="assets/ui-motion-polish.css?v=20260928a">'
-JS='<script defer src="assets/ui-motion-polish.js?v=20260928a"></script>'
+OLD_JS='<script defer src="assets/ui-motion-polish.js?v=20260928a"></script>'\nJS='<script defer src="assets/ui-motion-polish.js?v=20260928b"></script>'
 
 def main():
     html=INDEX.read_text(encoding="utf-8")
