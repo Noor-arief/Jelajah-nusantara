@@ -15,6 +15,7 @@
       "header." + HEADER_CLASS + " " + ROOT + "," +
       "header." + HEADER_CLASS + " " + ROOT + " .jl-language-menu{z-index:1302!important;}" +
       ".jl-language-backdrop{z-index:1200!important;}" +
+      "header." + HEADER_CLASS + " " + ROOT + " .jl-language-menu{bottom:calc(100% - 100dvh)!important;}" +
       "}";
     document.head.appendChild(style);
   }
