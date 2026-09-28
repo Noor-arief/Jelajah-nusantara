@@ -350,13 +350,26 @@
       }
     });
 
-    /* Keep one real contact shortcut visible in the social/contact area. */
+    /* Keep only real JelNusa contact/social shortcuts visible. */
     const oldSocial=links.find(a=>{
       const label=(a.textContent||"").trim();
       const href=(a.getAttribute("href")||"").trim();
       return href==="#" && ["📸","f","𝕏","P"].includes(label);
     });
     const socialWrap=oldSocial&&oldSocial.parentElement;
+
+    if(socialWrap && !socialWrap.querySelector(".jl-footer-linkedin")){
+      const linkedin=document.createElement("a");
+      linkedin.className="jl-footer-linkedin";
+      linkedin.href="https://www.linkedin.com/company/jelnusa";
+      linkedin.target="_blank";
+      linkedin.rel="noopener noreferrer";
+      linkedin.setAttribute("aria-label","LinkedIn JelNusa");
+      linkedin.textContent="in";
+      linkedin.title="LinkedIn JelNusa";
+      socialWrap.appendChild(linkedin);
+    }
+
     if(socialWrap && !socialWrap.querySelector(".jl-footer-email")){
       const email=document.createElement("a");
       email.className="jl-footer-email";
