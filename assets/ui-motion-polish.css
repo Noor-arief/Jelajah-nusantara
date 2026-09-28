@@ -153,3 +153,30 @@ footer a[hidden],
 footer button[hidden]{
   display:none!important;
 }
+
+
+/* Phase 7 minor navigation polish — remove persistent active underline/focus decoration */
+header a,
+header nav a,
+footer a {
+  text-decoration: none !important;
+}
+header a:active,
+header a:focus,
+header a:focus-visible,
+header nav a:active,
+header nav a:focus,
+header nav a:focus-visible,
+footer a:active,
+footer a:focus,
+footer a:focus-visible {
+  text-decoration: none !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+header a::after,
+header nav a::after,
+footer a::after {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+}
