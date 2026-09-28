@@ -31,3 +31,6 @@ JelNusa may use approved partner or affiliate links. Bookings, payments, cancell
 
 ## Editorial scope
 JelNusa focuses on useful, destination-specific travel information for Indonesia. It is not a hotel, airline, tour operator, travel agency, booking provider, government authority, emergency service, or official travel authority.
+
+## Discovery notifications
+- IndexNow discovery notifications are enabled for important public JelNusa URL changes.
