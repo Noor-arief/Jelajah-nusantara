@@ -104,6 +104,43 @@
     setTimeout(closeLanguageUi, 180);
   }
 
+
+  function openLanguageUi() {
+    const root = getRoot();
+    const menu = (root && root.querySelector(".jl-language-menu")) || getMenu();
+    if (!root || !menu) return false;
+
+    const trigger = root.querySelector(".jl-language-trigger");
+    root.classList.add("is-open");
+    if (trigger) trigger.setAttribute("aria-expanded", "true");
+
+    if (window.innerWidth <= MOBILE_BP) {
+      const languageBackdrop = getBackdrop();
+      if (languageBackdrop) languageBackdrop.classList.add("is-visible");
+      portalMenuForMobile();
+    } else {
+      restoreMenuForDesktop();
+      menu.style.display = "";
+      menu.style.pointerEvents = "";
+      menu.style.opacity = "";
+      menu.style.visibility = "";
+    }
+
+    return true;
+  }
+
+  function stabilizeOpenLanguageUi() {
+    openLanguageUi();
+    requestAnimationFrame(openLanguageUi);
+    setTimeout(openLanguageUi, 60);
+    setTimeout(openLanguageUi, 180);
+  }
+
+  window.JelNusaLanguageSelector = Object.assign({}, window.JelNusaLanguageSelector, {
+    open: stabilizeOpenLanguageUi,
+    close: queueClose
+  });
+
   function schedulePortalAfterTrigger() {
     requestAnimationFrame(function () {
       const root = getRoot();
