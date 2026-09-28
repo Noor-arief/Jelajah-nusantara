@@ -1,5 +1,5 @@
-/* Phase 1 targeted hotfix: mobile language selector cleanup only.
-   Prevents stale backdrop/body scroll lock after a language is selected. */
+/* Phase 1 targeted hotfix v2: mobile language selector cleanup only.
+   Scope: close stale language selector/backdrop after a language is selected. */
 (function () {
   "use strict";
 
@@ -27,14 +27,32 @@
     document.body.style.overflow = "";
   }
 
+  function queueClose() {
+    requestAnimationFrame(closeLanguageUi);
+    setTimeout(closeLanguageUi, 80);
+  }
+
+  /* Capture phase is intentional: the legacy selector handler may stop bubbling. */
   document.addEventListener("click", function (event) {
     const option = event.target.closest(
       ROOT + ' .jl-language-menu button[data-lang]'
     );
     if (!option) return;
+    queueClose();
+  }, true);
 
-    /* Run after the existing language handler/i18next update. */
-    requestAnimationFrame(closeLanguageUi);
-    setTimeout(closeLanguageUi, 60);
-  });
+  /* Keyboard/programmatic language changes get the same cleanup. */
+  function bindI18nCleanup() {
+    if (!window.i18next || typeof window.i18next.on !== "function") return false;
+    window.i18next.on("languageChanged", queueClose);
+    return true;
+  }
+
+  if (!bindI18nCleanup()) {
+    let attempts = 0;
+    const timer = setInterval(function () {
+      attempts += 1;
+      if (bindI18nCleanup() || attempts >= 20) clearInterval(timer);
+    }, 250);
+  }
 })();
