@@ -3,8 +3,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
-OLD = '<script defer src="assets/language-mobile-hotfix.js?v=20260928d"></script>'
-NEW = '<script defer src="assets/language-mobile-hotfix.js?v=20260928e"></script>'
+OLD = '<script defer src="assets/language-mobile-hotfix.js?v=20260928e"></script>'
+NEW = '<script defer src="assets/language-mobile-hotfix.js?v=20260928f"></script>'
 
 def main():
     html = INDEX.read_text(encoding="utf-8")
