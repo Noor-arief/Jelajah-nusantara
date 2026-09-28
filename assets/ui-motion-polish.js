@@ -111,7 +111,7 @@
         opacity:.72;
       }
 
-      @media (max-width:480px){
+      @media (max-width:768px){
         .vireqo-ai-inputbar input{font-size:16px!important}
       }
 
