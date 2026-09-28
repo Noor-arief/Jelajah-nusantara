@@ -33,10 +33,10 @@
 
     link.href = cta.url;
     link.target = "_blank";
-    link.rel = cta.tracked ? "noopener noreferrer sponsored" : "noopener noreferrer";
+    link.rel = cta.tracked === false ? "noopener noreferrer" : "noopener noreferrer sponsored";
     link.dataset.affiliateProduct = "stay";
     link.dataset.affiliateProvider = cta.provider;
-    link.dataset.affiliateTracked = cta.tracked ? "true" : "false";
+    link.dataset.affiliateTracked = cta.tracked === null ? "server" : (cta.tracked ? "true" : "false");
     link.dataset.affiliateDestination = destination;
     link.setAttribute("aria-label", cta.label + " — " + destination);
     link.innerHTML = '<span aria-hidden="true">🏨</span><span class="jl-affiliate-label"></span><span aria-hidden="true">↗</span>';
