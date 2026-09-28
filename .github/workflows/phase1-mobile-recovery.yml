@@ -1,0 +1,52 @@
+name: JelNusa Phase 1 Mobile Recovery
+
+on:
+  push:
+    branches:
+      - phase-1-mobile-recovery
+    paths:
+      - ".github/workflows/phase1-mobile-recovery.yml"
+      - "tools/phase1_mobile_recovery.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout recovery branch
+        uses: actions/checkout@v4
+        with:
+          ref: phase-1-mobile-recovery
+          fetch-depth: 1
+
+      - name: Apply isolated mobile recovery patch
+        run: python tools/phase1_mobile_recovery.py
+
+      - name: Validate protected JelNusa baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f assets/mobile-recovery.css
+          test -f phase1-mobile-recovery-report.json
+          grep -q 'assets/mobile-recovery.css?v=20260928' index.html
+          test "$(grep -o 'https://assistant.vireqo.id/client.js' index.html | wc -l)" -eq 1
+          test "$(grep -o 'data-client-id="jelnusa-staging"' index.html | wc -l)" -eq 1
+          test "$(find locales -maxdepth 1 -name '*.json' | wc -l)" -eq 8
+          git diff --check
+
+      - name: Commit recovery artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No patch changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html assets/mobile-recovery.css phase1-mobile-recovery-report.json
+          git commit -m "fix: apply isolated JelNusa mobile recovery layer"
+          git push origin HEAD:phase-1-mobile-recovery

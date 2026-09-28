@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "index_size_before": 7852390,
+  "index_size_after": 7852390,
+  "index_delta": 0,
+  "stylesheet": "assets/mobile-recovery.css",
+  "stylesheet_bytes": 4626,
+  "nusa_loader_preserved": true,
+  "jelnusa_tenant_preserved": true,
+  "locale_files": [
+    "ar.json",
+    "en.json",
+    "id.json",
+    "ja.json",
+    "ko.json",
+    "nl.json",
+    "th.json",
+    "zh.json"
+  ],
+  "production_services_touched": 0
+}
