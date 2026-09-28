@@ -16,12 +16,18 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   notify-indexnow:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
       - name: Wait for GitHub Pages key propagation
         shell: bash
         run: |
@@ -65,6 +71,30 @@ jobs:
           cat /tmp/indexnow-response.txt || true
 
           case "$STATUS" in
-            200|202) exit 0 ;;
+            200|202) ;;
             *) echo "IndexNow submission failed."; exit 1 ;;
           esac
+
+          cat > indexnow-status.json <<JSON
+          {
+            "status": "PASS",
+            "http_status": $STATUS,
+            "submitted_at_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "host": "jelnusa.com",
+            "url_count": 6,
+            "key_location": "https://jelnusa.com/4b1efc0223310325d73cd5a43421a9c863dbe82c5af3cda44f3445a1623be9a2.txt"
+          }
+          JSON
+
+      - name: Record successful IndexNow submission
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add indexnow-status.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Phase 7: record IndexNow submission"
+          git push origin HEAD:main
