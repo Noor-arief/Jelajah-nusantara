@@ -1,0 +1,104 @@
+name: Phase 4 Affiliate Card Regression
+
+on:
+  push:
+    branches:
+      - phase-4-affiliate-integration
+    paths:
+      - ".github/workflows/phase4-affiliate-card-regression.yml"
+      - "affiliate/**"
+      - "index.html"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-4-affiliate-integration
+
+      - run: python -m pip install selenium --quiet
+
+      - name: Start local site
+        run: |
+          python -m http.server 8080 >/tmp/jelnusa-phase4.log 2>&1 &
+          echo $! >/tmp/jelnusa-phase4.pid
+          sleep 2
+
+      - name: Validate cards, locale labels and routing
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,shutil,time,urllib.parse
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          labels={
+            "id":"Cari Penginapan","en":"Find Stays","zh":"查找住宿","ja":"宿泊先を探す",
+            "ko":"숙소 찾기","ar":"ابحث عن إقامة","nl":"Vind verblijf","th":"ค้นหาที่พัก"
+          }
+
+          o=Options();o.binary_location=shutil.which("google-chrome")
+          o.add_argument("--headless=new");o.add_argument("--no-sandbox");o.add_argument("--disable-dev-shm-usage")
+          o.add_argument("--window-size=1440,1400")
+          d=webdriver.Chrome(options=o)
+          d.get("http://127.0.0.1:8080/")
+          time.sleep(4)
+
+          state=d.execute_script("""
+            const links=[...document.querySelectorAll('.region-card .jl-affiliate-card-cta')];
+            return links.map(a=>({
+              destination:a.dataset.affiliateDestination,
+              href:a.href,
+              tracked:a.dataset.affiliateTracked,
+              provider:a.dataset.affiliateProvider,
+              text:(a.innerText||'').trim()
+            }));
+          """)
+          print("initial",json.dumps(state[:5],ensure_ascii=False,indent=2))
+          assert len(state)==35,len(state)
+          assert len(set(x["destination"] for x in state))==35
+          assert all(x["provider"]=="booking" for x in state)
+          assert all(x["tracked"]=="false" for x in state)
+          assert all("booking.com/searchresults.html" in x["href"] for x in state)
+          assert all("aid=" not in x["href"] for x in state)
+
+          raja=next(x for x in state if x["destination"]=="Raja Ampat")
+          q=urllib.parse.parse_qs(urllib.parse.urlparse(raja["href"]).query)
+          assert q.get("ss")==["Raja Ampat"],q
+
+          for lang,label in labels.items():
+            if d.execute_script("return document.documentElement.lang") != lang:
+              d.find_element(By.CSS_SELECTOR,'.jl-language-trigger').click()
+              time.sleep(.2)
+              d.find_element(By.CSS_SELECTOR,f'.jl-language-menu button[data-lang="{lang}"]').click()
+              time.sleep(.5)
+            count=d.execute_script("return document.querySelectorAll('.jl-affiliate-card-cta').length")
+            texts=d.execute_script("return [...document.querySelectorAll('.jl-affiliate-card-cta .jl-affiliate-label')].map(x=>x.textContent.trim())")
+            assert count==35,(lang,count)
+            assert texts and all(x==label for x in texts),(lang,texts[:5])
+
+          # Region tab rerender must restore CTAs.
+          tabs=d.find_elements(By.CSS_SELECTOR,'.region-tab')
+          assert tabs
+          for tab in tabs[:4]:
+            d.execute_script("arguments[0].click()",tab)
+            time.sleep(.35)
+            visible=d.execute_script("return document.querySelectorAll('.region-card').length")
+            ctas=d.execute_script("return document.querySelectorAll('.region-card .jl-affiliate-card-cta').length")
+            assert visible==ctas,(tab.text,visible,ctas)
+
+          assert d.execute_script("return document.documentElement.scrollWidth <= innerWidth + 2")
+          d.quit()
+          print("PASS Phase 4 card affiliate regression")
+          PY
+
+      - name: Stop local
+        if: always()
+        run: |
+          if [ -f /tmp/jelnusa-phase4.pid ]; then kill "$(cat /tmp/jelnusa-phase4.pid)" || true; fi
