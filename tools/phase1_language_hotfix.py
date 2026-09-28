@@ -3,8 +3,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
-OLD = '<script defer src="assets/language-mobile-hotfix.js?v=20260928"></script>'
-NEW = '<script defer src="assets/language-mobile-hotfix.js?v=20260928c"></script>'
+OLD = '<script defer src="assets/language-mobile-hotfix.js?v=20260928c"></script>'
+NEW = '<script defer src="assets/language-mobile-hotfix.js?v=20260928d"></script>'
 
 def main():
     html = INDEX.read_text(encoding="utf-8")
@@ -33,7 +33,7 @@ def main():
         raise RuntimeError("Language hotfix marker must occur exactly once")
 
     INDEX.write_text(html, encoding="utf-8")
-    print("PASS: language hotfix v3 wired with cache-busting version")
+    print("PASS: language hotfix v4 wired with cache-busting version")
 
 if __name__ == "__main__":
     try:
