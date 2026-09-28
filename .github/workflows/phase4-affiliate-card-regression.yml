@@ -64,13 +64,15 @@ jobs:
           assert len(state)==35,len(state)
           assert len(set(x["destination"] for x in state))==35
           assert all(x["provider"]=="booking" for x in state)
-          assert all(x["tracked"]=="false" for x in state)
-          assert all("booking.com/searchresults.html" in x["href"] for x in state)
+          assert all(x["tracked"]=="server" for x in state)
+          assert all("assistant.vireqo.id/affiliate/out" in x["href"] for x in state)
           assert all("aid=" not in x["href"] for x in state)
 
           raja=next(x for x in state if x["destination"]=="Raja Ampat")
           q=urllib.parse.parse_qs(urllib.parse.urlparse(raja["href"]).query)
-          assert q.get("ss")==["Raja Ampat"],q
+          assert q.get("client_id")==["jelnusa-staging"],q
+          assert q.get("product_type")==["stay"],q
+          assert q.get("destination")==["Raja Ampat"],q
 
           for lang,label in labels.items():
             if d.execute_script("return document.documentElement.lang") != lang:
