@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "guide_topic_count": 7,
+  "source": "existing JelNusa English locale guide/planning copy only",
+  "hub": "https://jelnusa.com/guides/",
+  "sitemap_updated": true,
+  "llms_updated": true,
+  "footer_links": {
+    "Travel Guides": "/guides/",
+    "Safety Guide": "/guides/#safety-guide",
+    "Budget Planner": "/guides/#budget-smart"
+  },
+  "filler_articles_created": false,
+  "nusa_backend_touched": false,
+  "railway_touched": false,
+  "shared_bima_touched": false
+}
