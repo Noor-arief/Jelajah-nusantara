@@ -1,0 +1,284 @@
+name: Phase 6 Final Production Regression
+
+on:
+  push:
+    branches:
+      - phase-6-final-regression-launch
+    paths:
+      - ".github/workflows/phase6-final-production-regression.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  final-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-6-final-regression-launch
+
+      - run: python -m pip install selenium --quiet
+
+      - name: Run full production regression
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time, uuid, urllib.request, urllib.error, urllib.parse
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          SITE='https://noor-arief.github.io/Jelajah-nusantara/'
+          ASSIST='https://assistant.vireqo.id'
+          ORIGIN='https://noor-arief.github.io'
+          report={
+            "desktop":{}, "mobile":{}, "languages":{}, "trust":{},
+            "affiliate":{}, "nusa":{}, "tenant_isolation":{}
+          }
+
+          def make_driver(width,height):
+            o=Options()
+            o.binary_location=shutil.which('google-chrome')
+            o.add_argument('--headless=new')
+            o.add_argument('--no-sandbox')
+            o.add_argument('--disable-dev-shm-usage')
+            o.add_argument(f'--window-size={width},{height}')
+            return webdriver.Chrome(options=o)
+
+          def base_checks(d, label):
+            s=d.execute_script("""
+              const host=document.getElementById('vireqo-ai-jelnusa-staging');
+              return {
+                width:innerWidth,
+                scrollWidth:document.documentElement.scrollWidth,
+                bodyWidth:document.body.scrollWidth,
+                lang:document.documentElement.lang,
+                dir:document.documentElement.dir||'',
+                cardCount:document.querySelectorAll('.region-card').length,
+                affiliateCardCount:document.querySelectorAll('.region-card .jl-affiliate-card-cta').length,
+                nusaHost:!!host,
+                nusaShadow:!!(host&&host.shadowRoot),
+                faq:!!document.getElementById('jl-faq'),
+                affiliateDisclosure:!!document.getElementById('jl-affiliate'),
+                disclaimer:!!document.getElementById('jl-disclaimer'),
+                terms:!!document.getElementById('terms-and-conditions'),
+                privacy:!!document.getElementById('privacy-policy'),
+                oldEmail:document.documentElement.innerHTML.includes('arifmuhamad942@gmail.com'),
+                newEmail:document.documentElement.innerHTML.includes('arifmuhamad94@gmail.com')
+              };
+            """)
+            assert s["scrollWidth"] <= s["width"] + 2, (label,s)
+            assert s["bodyWidth"] <= s["width"] + 2, (label,s)
+            assert s["cardCount"]==35, (label,s)
+            assert s["affiliateCardCount"]==35, (label,s)
+            assert s["nusaHost"] and s["nusaShadow"], (label,s)
+            assert all([s["faq"],s["affiliateDisclosure"],s["disclaimer"],s["terms"],s["privacy"]]), (label,s)
+            assert not s["oldEmail"] and s["newEmail"], (label,s)
+            return s
+
+          # DESKTOP
+          d=make_driver(1440,1200)
+          d.get(SITE); time.sleep(5)
+          report["desktop"]["base"]=base_checks(d,"desktop")
+
+          desktop_extra=d.execute_script("""
+            const hero=document.querySelector('main, .hero, header');
+            const cards=[...document.querySelectorAll('.region-card')];
+            return {
+              visibleCards:cards.filter(c=>{const r=c.getBoundingClientRect();const cs=getComputedStyle(c);return r.width>0&&r.height>0&&cs.display!=='none'}).length,
+              hasMotionClass:document.documentElement.classList.contains('jl-phase15-motion'),
+              trustCss:[...document.styleSheets].some(s=>String(s.href||'').includes('trust-center.css')),
+              affiliateJs:[...document.scripts].some(s=>String(s.src||'').includes('affiliate-card-integration.js'))
+            };
+          """)
+          assert desktop_extra["visibleCards"]>0, desktop_extra
+          assert desktop_extra["trustCss"] and desktop_extra["affiliateJs"], desktop_extra
+          report["desktop"]["extra"]=desktop_extra
+
+          # Booking card and modal structure
+          card=d.find_element(By.XPATH,"//*[contains(@class,'region-card')][.//h3[normalize-space()='Raja Ampat']]")
+          card_link=card.find_element(By.CSS_SELECTOR,'.jl-affiliate-card-cta')
+          card_state=d.execute_script("""
+            const a=arguments[0];
+            return {href:a.href,target:a.getAttribute('target'),onclick:a.getAttribute('onclick'),text:a.innerText.trim()};
+          """,card_link)
+          assert card_state["target"]=="_blank",card_state
+          assert card_state["onclick"] in (None,""),card_state
+          assert "assistant.vireqo.id/affiliate/out" in card_state["href"],card_state
+          report["affiliate"]["card"]=card_state
+
+          d.execute_script("openDestination('Raja Ampat')"); time.sleep(.4)
+          modal_state=d.execute_script("""
+            const m=document.getElementById('destinationDetailModal');
+            const links=[...m.querySelectorAll('a')].filter(a=>a.href.includes('/affiliate/out'));
+            return {
+              open:m.classList.contains('is-open'),
+              bookingCount:links.length,
+              links:links.map(a=>({text:a.textContent.trim(),target:a.getAttribute('target'),href:a.href,className:a.className})),
+              topDup:m.querySelectorAll('.jl-destination-stay-cta').length,
+              bottomDup:m.querySelectorAll('.jl-destination-bottom-stay').length,
+              accommodation:m.querySelectorAll('.jl-things-book-stay').length
+            };
+          """)
+          assert modal_state["open"],modal_state
+          assert modal_state["bookingCount"]==1,modal_state
+          assert modal_state["topDup"]==0 and modal_state["bottomDup"]==0 and modal_state["accommodation"]==1,modal_state
+          assert modal_state["links"][0]["target"]=="_blank",modal_state
+          report["affiliate"]["modal"]=modal_state
+          d.execute_script("closeDestination()")
+          d.quit()
+
+          # MOBILE
+          d=make_driver(430,932)
+          d.get(SITE); time.sleep(5)
+          report["mobile"]["base"]=base_checks(d,"mobile")
+          mobile_extra=d.execute_script("""
+            const host=document.getElementById('vireqo-ai-jelnusa-staging');
+            const r=host&&host.shadowRoot;
+            const input=r&&r.querySelector('.vireqo-ai-inputbar input');
+            return {
+              inputFont:input?getComputedStyle(input).fontSize:null,
+              viewportWidth:innerWidth,
+              cardWidths:[...document.querySelectorAll('.region-card')].slice(0,5).map(x=>Math.round(x.getBoundingClientRect().width)),
+              languageTrigger:!!document.querySelector('.jl-language-trigger')
+            };
+          """)
+          assert mobile_extra["inputFont"]=="16px",mobile_extra
+          assert mobile_extra["languageTrigger"],mobile_extra
+          report["mobile"]["extra"]=mobile_extra
+
+          # 8 LANGUAGES + TRUST
+          expected={
+            "id":"Cari Penginapan","en":"Find Stays","zh":"查找住宿","ja":"宿泊先を探す",
+            "ko":"숙소 찾기","ar":"ابحث عن إقامة","nl":"Vind verblijf","th":"ค้นหาที่พัก"
+          }
+          for lang,label in expected.items():
+            if d.execute_script("return document.documentElement.lang") != lang:
+              d.find_element(By.CSS_SELECTOR,'.jl-language-trigger').click(); time.sleep(.2)
+              d.find_element(By.CSS_SELECTOR,f'.jl-language-menu button[data-lang="{lang}"]').click(); time.sleep(.45)
+            state=d.execute_script("""
+              return {
+                lang:document.documentElement.lang,
+                dir:document.documentElement.dir||'',
+                labels:[...document.querySelectorAll('.jl-affiliate-label')].map(x=>x.textContent.trim()),
+                faqTitle:document.querySelector('#jl-faq h2')?.textContent.trim()||'',
+                affTitle:document.querySelector('#jl-affiliate h2')?.textContent.trim()||'',
+                discTitle:document.querySelector('#jl-disclaimer h2')?.textContent.trim()||'',
+                termsAI:!!document.querySelector('.jl-terms-ai-addendum'),
+                privacyAI:!!document.querySelector('.jl-privacy-ai-addendum'),
+                scrollWidth:document.documentElement.scrollWidth,
+                width:innerWidth
+              };
+            """)
+            assert state["lang"]==lang,(lang,state)
+            assert len(state["labels"])==35,(lang,len(state["labels"]))
+            assert all(x==label for x in state["labels"]),(lang,state["labels"][:5])
+            assert state["faqTitle"] and state["affTitle"] and state["discTitle"],(lang,state)
+            assert state["termsAI"] and state["privacyAI"],(lang,state)
+            assert state["scrollWidth"]<=state["width"]+2,(lang,state)
+            if lang=="ar":
+              assert state["dir"]=="rtl",(lang,state)
+            report["languages"][lang]={"label":label,"dir":state["dir"]}
+          report["trust"]["8_language_trust"]=True
+
+          # NUSA UI open / close reset
+          if d.execute_script("return document.documentElement.lang")!='id':
+            d.find_element(By.CSS_SELECTOR,'.jl-language-trigger').click();time.sleep(.2)
+            d.find_element(By.CSS_SELECTOR,'.jl-language-menu button[data-lang="id"]').click();time.sleep(.4)
+          d.execute_script("""
+            const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+            r.querySelector('.vireqo-ai-launcher').click();
+          """); time.sleep(.2)
+          before=d.execute_script("return sessionStorage.getItem('vireqo_ai_session_id:jelnusa-staging')")
+          d.execute_script("""
+            const r=document.getElementById('vireqo-ai-jelnusa-staging').shadowRoot;
+            r.querySelector('.vireqo-ai-close').click();
+          """); time.sleep(.2)
+          after=d.execute_script("return sessionStorage.getItem('vireqo_ai_session_id:jelnusa-staging')")
+          assert before and after and before!=after,(before,after)
+          report["nusa"]["close_reset"]=True
+          d.quit()
+
+          # BACKEND ROUTING + TENANT SAFETY
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, req, fp, code, msg, headers, newurl): return None
+          opener=urllib.request.build_opener(NoRedirect)
+
+          def request_no_redirect(url):
+            try:
+              r=opener.open(url,timeout=30)
+              return r.status,dict(r.headers),r.read()
+            except urllib.error.HTTPError as e:
+              return e.code,dict(e.headers),e.read()
+
+          good=f'{ASSIST}/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Raja%20Ampat'
+          code,h,b=request_no_redirect(good)
+          assert code==302,(code,h,b)
+          loc=h.get('Location') or h.get('location')
+          p=urllib.parse.urlparse(loc); q=urllib.parse.parse_qs(p.query)
+          assert p.hostname=='www.booking.com',(loc,p.hostname)
+          assert q.get('ss')==['Raja Ampat'],q
+          report["affiliate"]["resolver"]={"code":code,"location":loc,"tracked":"aid" in q}
+
+          for name,url,expected_code in [
+            ("wrong_tenant",f'{ASSIST}/affiliate/out?client_id=other&destination=Raja%20Ampat',404),
+            ("unknown_destination",f'{ASSIST}/affiliate/out?client_id=jelnusa-staging&destination=Unknown%20Place',404),
+            ("unsupported_product",f'{ASSIST}/affiliate/out?client_id=jelnusa-staging&product_type=flight&destination=Raja%20Ampat',400)
+          ]:
+            c,_,_=request_no_redirect(url)
+            assert c==expected_code,(name,c,expected_code)
+            report["tenant_isolation"][name]=c
+
+          # NUSA end-to-end conversation + CTA
+          endpoint=f'{ASSIST}/chat'
+          sid='phase6-'+uuid.uuid4().hex[:12]
+          def post(client_id,sid,message,lang='id'):
+            data=json.dumps({"client_id":client_id,"session_id":sid,"message":message,"language":lang}).encode()
+            req=urllib.request.Request(endpoint,data=data,method='POST')
+            req.add_header('Content-Type','application/json')
+            req.add_header('Origin',ORIGIN)
+            try:
+              with urllib.request.urlopen(req,timeout=60) as res:
+                return res.status,json.loads(res.read().decode())
+            except urllib.error.HTTPError as e:
+              raw=e.read().decode(errors='replace')
+              try: payload=json.loads(raw)
+              except: payload={"raw":raw}
+              return e.code,payload
+
+          c1,r1=post('jelnusa-staging',sid,'Aku ingin liburan ke Raja Ampat 4 hari. Rekomendasikan itinerary dan penginapan.')
+          assert c1==200,(c1,r1)
+          assert r1.get('conversation_status')=='waiting_name',(c1,r1)
+          c2,r2=post('jelnusa-staging',sid,'skip')
+          assert c2==200,(c2,r2)
+          reply=r2.get('reply') or ''
+          assert 'Salam kenal, Skip' not in reply,reply
+          assert 'bima' not in reply.lower(),reply
+          ctas=r2.get('affiliate_ctas') or []
+          assert any(x.get('destination')=='Raja Ampat' for x in ctas),ctas
+          assert all('assistant.vireqo.id/affiliate/out' in x.get('url','') for x in ctas),ctas
+          report["nusa"]["conversation"]={"reply":reply[:800],"ctas":ctas}
+
+          # Explicit bad client boundary.
+          bad_sid='phase6-bad-'+uuid.uuid4().hex[:10]
+          cb,rb=post('nonexistent-client',bad_sid,'hello')
+          assert cb in (400,404), (cb,rb)
+          report["tenant_isolation"]["unknown_client_chat"]=cb
+
+          Path('phase6-final-production-regression-report.json').write_text(
+            json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8'
+          )
+          print('PASS Phase 6 Final Production Regression')
+          PY
+
+      - name: Commit final regression report
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase6-final-production-regression-report.json
+          git commit -m "chore: record Phase 6 final production regression"
+          git push origin HEAD:phase-6-final-regression-launch
