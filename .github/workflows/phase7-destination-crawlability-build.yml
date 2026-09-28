@@ -8,6 +8,9 @@ on:
       - ".github/workflows/phase7-destination-crawlability-build.yml"
       - "tools/phase7_destination_crawlability_build.py"
       - "assets/ui-motion-polish.js"
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
