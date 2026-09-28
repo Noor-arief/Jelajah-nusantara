@@ -19,34 +19,7 @@
 }
 
 
-/* Phase 4 destination detail affiliate CTAs */
-#destinationDetailModal .jl-destination-stay-cta,
-#destinationDetailModal .jl-destination-bottom-stay{
-  text-decoration:none!important;
-  cursor:pointer;
-}
-#destinationDetailModal .jl-destination-stay-cta{
-  display:inline-flex!important;
-  align-items:center;
-  gap:7px;
-}
-#destinationDetailModal .destination-detail-cta{
-  gap:14px;
-}
-#destinationDetailModal .jl-destination-bottom-stay{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
-@media (max-width:700px){
-  #destinationDetailModal .destination-detail-cta{
-    align-items:stretch;
-  }
-  #destinationDetailModal .jl-destination-bottom-stay{
-    width:100%;
-  }
-}
-
+/* Phase 4 destination detail affiliate CTA */
 #destinationDetailModal .jl-things-book-stay{
   color:inherit;
   text-decoration:underline;
