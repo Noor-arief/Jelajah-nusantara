@@ -1,0 +1,65 @@
+name: Phase 1.5 NUSA DOM Audit
+
+on:
+  push:
+    branches:
+      - phase-1.5-ui-motion-polish
+    paths:
+      - ".github/workflows/phase1.5-nusa-dom-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1.5-ui-motion-polish
+      - run: python -m pip install selenium --quiet
+      - name: Audit NUSA host surface
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          opts=Options()
+          opts.binary_location=shutil.which("google-chrome")
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+          d=webdriver.Chrome(options=opts)
+          d.get("https://noor-arief.github.io/Jelajah-nusantara/")
+          time.sleep(4)
+          data=d.execute_script("""
+          const all=[...document.querySelectorAll('*')];
+          const fixed=all.filter(e=>{
+            const c=getComputedStyle(e),r=e.getBoundingClientRect();
+            return c.position==='fixed' && r.width>20 && r.height>20;
+          }).map(e=>({
+            tag:e.tagName,id:e.id||null,className:String(e.className||''),
+            text:(e.innerText||e.textContent||'').trim().slice(0,100),
+            rect:(()=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height}})(),
+            z:getComputedStyle(e).zIndex
+          })).slice(0,80);
+          const iframes=[...document.querySelectorAll('iframe')].map(e=>({id:e.id||null,className:String(e.className||''),src:e.src,title:e.title}));
+          const shadowHosts=all.filter(e=>e.shadowRoot).map(e=>({tag:e.tagName,id:e.id||null,className:String(e.className||''),html:e.shadowRoot.innerHTML.slice(0,500)}));
+          return {fixed,iframes,shadowHosts};
+          """)
+          Path("phase1.5-nusa-dom-audit.json").write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding="utf-8")
+          d.quit()
+          PY
+      - name: Commit report
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase1.5-nusa-dom-audit.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: audit NUSA DOM surface"
+          git push origin HEAD:phase-1.5-ui-motion-polish
