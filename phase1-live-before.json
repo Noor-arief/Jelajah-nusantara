@@ -1,0 +1,140 @@
+{
+  "bodyOverflow": "clip visible",
+  "bodyStyle": null,
+  "header": {
+    "aria": null,
+    "bg": "rgba(255, 255, 255, 0.95)",
+    "cls": "",
+    "display": "block",
+    "opacity": "1",
+    "pointerEvents": "auto",
+    "position": "sticky",
+    "rect": {
+      "h": 70.1875,
+      "w": 485,
+      "x": 0,
+      "y": 0
+    },
+    "sel": "header",
+    "style": null,
+    "visibility": "visible",
+    "z": "1000"
+  },
+  "href": "https://noor-arief.github.io/Jelajah-nusantara/",
+  "lang": "en",
+  "languageBackdrop": {
+    "aria": null,
+    "bg": "rgba(15, 23, 42, 0.45)",
+    "cls": "jl-language-backdrop",
+    "display": "block",
+    "opacity": "0",
+    "pointerEvents": "auto",
+    "position": "fixed",
+    "rect": {
+      "h": 789,
+      "w": 485,
+      "x": 0,
+      "y": 0
+    },
+    "sel": ".jl-language-backdrop",
+    "style": null,
+    "visibility": "hidden",
+    "z": "1200"
+  },
+  "menu": {
+    "aria": null,
+    "bg": "rgb(255, 255, 255)",
+    "cls": "jl-language-menu",
+    "display": "none",
+    "opacity": "0",
+    "pointerEvents": "none",
+    "position": "fixed",
+    "rect": {
+      "h": 0,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    "sel": ".jl-language-menu",
+    "style": "display: none; pointer-events: none;",
+    "visibility": "hidden",
+    "z": "1201"
+  },
+  "navBackdrop": {
+    "aria": null,
+    "bg": "rgba(15, 23, 42, 0.45)",
+    "cls": "nav-backdrop",
+    "display": "none",
+    "opacity": "1",
+    "pointerEvents": "auto",
+    "position": "fixed",
+    "rect": {
+      "h": 0,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    "sel": "#navBackdrop",
+    "style": null,
+    "visibility": "visible",
+    "z": "999"
+  },
+  "overlays": [],
+  "primaryNav": {
+    "aria": null,
+    "bg": "rgb(255, 255, 255)",
+    "cls": "",
+    "display": "flex",
+    "opacity": "1",
+    "pointerEvents": "auto",
+    "position": "fixed",
+    "rect": {
+      "h": 789,
+      "w": 330,
+      "x": 485,
+      "y": 0
+    },
+    "sel": "#primaryNav",
+    "style": null,
+    "visibility": "visible",
+    "z": "1050"
+  },
+  "root": {
+    "aria": null,
+    "bg": "rgba(0, 0, 0, 0)",
+    "cls": "jl-language",
+    "display": "flex",
+    "opacity": "1",
+    "pointerEvents": "auto",
+    "position": "relative",
+    "rect": {
+      "h": 40,
+      "w": 119,
+      "x": 351.609375,
+      "y": 14.59375
+    },
+    "sel": "#jelLanguageSwitcher",
+    "style": null,
+    "visibility": "visible",
+    "z": "1200"
+  },
+  "trigger": {
+    "aria": "false",
+    "bg": "rgba(255, 255, 255, 0.96)",
+    "cls": "jl-language-trigger",
+    "display": "flex",
+    "opacity": "1",
+    "pointerEvents": "auto",
+    "position": "static",
+    "rect": {
+      "h": 40,
+      "w": 119,
+      "x": 351.609375,
+      "y": 14.59375
+    },
+    "sel": ".jl-language-trigger",
+    "style": null,
+    "visibility": "visible",
+    "z": "auto"
+  }
+}
