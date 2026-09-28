@@ -1,0 +1,67 @@
+name: Phase 4 Destination Modal Selector Audit
+
+on:
+  push:
+    branches:
+      - phase4-destination-modal-affiliate-hotfix
+    paths:
+      - ".github/workflows/phase4-destination-modal-selector-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase4-destination-modal-affiliate-hotfix
+      - run: python -m pip install selenium --quiet
+      - name: Inspect modal booking blocks
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,shutil,time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          o=Options();o.binary_location=shutil.which('google-chrome')
+          o.add_argument('--headless=new');o.add_argument('--no-sandbox');o.add_argument('--disable-dev-shm-usage')
+          o.add_argument('--window-size=1440,1200')
+          d=webdriver.Chrome(options=o)
+          d.get('https://noor-arief.github.io/Jelajah-nusantara/')
+          time.sleep(5)
+
+          d.execute_script("openDestination('Raja Ampat')")
+          time.sleep(.4)
+
+          data=d.execute_script("""
+            const modal=document.getElementById('destinationDetailModal');
+            const els=[...modal.querySelectorAll('*')];
+            const hits=els.filter(e=>{
+              const own=(e.childNodes.length===1 && e.childNodes[0].nodeType===3) ? e.textContent.trim() : '';
+              return /Tempat Menginap|Where to Stay|Tautan Pemesanan|Booking Link|Hal yang Bisa Dipesan|What You Can Book|Segera Hadir|Coming Soon|Siap menjelajahi|Ready to explore/i.test(own);
+            }).map(e=>{
+              const p=e.parentElement;
+              const gp=p?.parentElement;
+              return {
+                tag:e.tagName,className:String(e.className||''),text:e.textContent.trim(),
+                parent: p?{tag:p.tagName,className:String(p.className||''),html:p.outerHTML.slice(0,8000)}:null,
+                grandparent: gp?{tag:gp.tagName,className:String(gp.className||''),html:gp.outerHTML.slice(0,12000)}:null
+              }
+            });
+            return {hits};
+          """)
+          Path('phase4-destination-modal-selector-audit.json').write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
+          d.quit()
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase4-destination-modal-selector-audit.json
+          git commit -m "chore: audit destination modal booking selectors"
+          git push origin HEAD:phase4-destination-modal-affiliate-hotfix
