@@ -1,0 +1,27 @@
+{
+  "status": "PASS_WITH_ACTIVATION_DEPENDENCY",
+  "implementation": "consent-first GA4 loader",
+  "default_state": "inactive until a valid G- measurement ID is configured",
+  "consent_mode": "basic-style gate: Google tag is not loaded before explicit consent",
+  "privacy": {
+    "google_signals": false,
+    "ad_personalization_signals": false,
+    "analytics_storage_before_consent": "none because tag does not load"
+  },
+  "events": [
+    "page_view via GA4 config",
+    "affiliate_click for Agoda/Booking.com/Traveloka or explicit affiliate links"
+  ],
+  "routes": [
+    "/",
+    "/about/",
+    "/destinations/",
+    "/guides/",
+    "/guides/plan-indonesia-trip/",
+    "/faq/"
+  ],
+  "nusa_backend_touched": false,
+  "railway_touched": false,
+  "shared_bima_touched": false,
+  "activation_required": "Set assets/analytics-config.js JELNUSA_ANALYTICS_ID to the real GA4 web stream Measurement ID"
+}
