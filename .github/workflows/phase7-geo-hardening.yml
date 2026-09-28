@@ -1,0 +1,57 @@
+name: JelNusa Phase 7 GEO Hardening
+
+on:
+  push:
+    branches:
+      - phase7-geo-hardening
+    paths:
+      - ".github/workflows/phase7-geo-hardening.yml"
+      - "tools/phase7_geo_hardening.py"
+      - "llms.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GEO branch
+        uses: actions/checkout@v4
+        with:
+          ref: phase7-geo-hardening
+          fetch-depth: 1
+
+      - name: Apply safe GEO hardening patch
+        run: python tools/phase7_geo_hardening.py
+
+      - name: Validate protected production baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f llms.txt
+          test -f phase7-geo-hardening-report.json
+          grep -q '"@type": "Organization"' index.html
+          grep -q '"@type": "WebSite"' index.html
+          grep -q '"@type": "WebPage"' index.html
+          grep -q '"@id": "https://jelnusa.com/#webpage"' index.html
+          grep -q 'rel="canonical" href="https://jelnusa.com/"' index.html
+          test "$(grep -o 'https://assistant.vireqo.id/client.js' index.html | wc -l)" -eq 1
+          test "$(grep -o 'data-client-id="jelnusa-staging"' index.html | wc -l)" -eq 1
+          test "$(find locales -maxdepth 1 -name '*.json' | wc -l)" -eq 8
+          git diff --check
+
+      - name: Commit GEO hardening patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No GEO patch changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html phase7-geo-hardening-report.json
+          git commit -m "Phase 7: harden GEO entity metadata"
+          git push origin HEAD:phase7-geo-hardening
