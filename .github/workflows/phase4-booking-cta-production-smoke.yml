@@ -1,0 +1,98 @@
+name: Phase 4 Booking CTA Production Smoke
+
+on:
+  push:
+    branches:
+      - phase4-booking-cta-simplify
+    paths:
+      - ".github/workflows/phase4-booking-cta-production-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - run: python -m pip install selenium --quiet
+
+      - name: Verify live simplified booking CTAs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,shutil,time
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          def make_driver():
+              o=Options();o.binary_location=shutil.which('google-chrome')
+              o.add_argument('--headless=new');o.add_argument('--no-sandbox');o.add_argument('--disable-dev-shm-usage')
+              o.add_argument('--window-size=430,932')
+              return webdriver.Chrome(options=o)
+
+          d=make_driver()
+          d.get('https://noor-arief.github.io/Jelajah-nusantara/')
+          time.sleep(5)
+
+          asset=d.execute_script("""
+            return {
+              js:[...document.scripts].map(x=>x.src).find(x=>x.includes('affiliate-card-integration.js'))||null,
+              css:[...document.styleSheets].map(x=>x.href).find(x=>String(x||'').includes('affiliate-ui.css'))||null
+            }
+          """)
+          print('ASSET',json.dumps(asset))
+          assert asset['js'] and 'v=20260928b' in asset['js'],asset
+          assert asset['css'] and 'v=20260928b' in asset['css'],asset
+
+          card=d.find_element(By.XPATH,"//*[contains(@class,'region-card')][.//h3[normalize-space()='Raja Ampat']]")
+          a=card.find_element(By.CSS_SELECTOR,'.jl-affiliate-card-cta')
+          card_state=d.execute_script("""
+            const a=arguments[0];
+            return {href:a.href,target:a.getAttribute('target'),onclick:a.getAttribute('onclick'),text:a.innerText.trim()};
+          """,a)
+          print('CARD',json.dumps(card_state,ensure_ascii=False))
+          assert card_state['target']=='_blank',card_state
+          assert card_state['onclick'] in (None,''),card_state
+
+          before=d.window_handles[:]
+          d.execute_script("arguments[0].scrollIntoView({block:'center'})",a);time.sleep(.3)
+          a.click()
+          for _ in range(30):
+              time.sleep(.2)
+              if len(d.window_handles)>len(before): break
+          assert len(d.window_handles)==len(before)+1,(before,d.window_handles)
+          d.close()
+          d.switch_to.window(before[0])
+
+          d.execute_script("openDestination('Raja Ampat')");time.sleep(.5)
+          modal_state=d.execute_script("""
+            const m=document.getElementById('destinationDetailModal');
+            const booking=[...m.querySelectorAll('a')].filter(a=>a.href.includes('/affiliate/out'));
+            return {
+              bookingCount:booking.length,
+              booking:booking.map(a=>({text:a.textContent.trim(),target:a.getAttribute('target'),onclick:a.getAttribute('onclick'),href:a.href,className:a.className})),
+              stay:m.querySelectorAll('.jl-destination-stay-cta').length,
+              bottom:m.querySelectorAll('.jl-destination-bottom-stay').length,
+              things:m.querySelectorAll('.jl-things-book-stay').length
+            }
+          """)
+          print('MODAL',json.dumps(modal_state,ensure_ascii=False,indent=2))
+          assert modal_state['bookingCount']==1,modal_state
+          assert modal_state['stay']==0 and modal_state['bottom']==0 and modal_state['things']==1,modal_state
+          active=modal_state['booking'][0]
+          assert active['target']=='_blank',active
+          assert active['onclick'] in (None,''),active
+
+          link=d.find_element(By.CSS_SELECTOR,'#destinationDetailModal .jl-things-book-stay')
+          before=d.window_handles[:]
+          d.execute_script("arguments[0].scrollIntoView({block:'center'})",link);time.sleep(.2)
+          link.click()
+          for _ in range(30):
+              time.sleep(.2)
+              if len(d.window_handles)>len(before): break
+          assert len(d.window_handles)==len(before)+1,(before,d.window_handles)
+          d.quit()
+          print('PASS LIVE simplified booking CTA smoke')
+          PY
