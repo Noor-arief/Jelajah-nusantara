@@ -1,0 +1,56 @@
+name: JelNusa Phase 7 SEO Head Patch
+
+on:
+  push:
+    branches:
+      - phase7-seo-geo-head
+    paths:
+      - ".github/workflows/phase7-seo-head.yml"
+      - "tools/phase7_seo_head.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout SEO branch
+        uses: actions/checkout@v4
+        with:
+          ref: phase7-seo-geo-head
+          fetch-depth: 1
+
+      - name: Apply safe SEO head patch
+        run: python tools/phase7_seo_head.py
+
+      - name: Validate protected production baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f phase7-seo-head-report.json
+          grep -q 'rel="canonical" href="https://jelnusa.com/"' index.html
+          grep -q 'name="description"' index.html
+          grep -q 'property="og:title"' index.html
+          grep -q 'property="og:url"' index.html
+          grep -q 'name="twitter:card"' index.html
+          grep -q 'type="application/ld+json"' index.html
+          test "$(grep -o 'https://assistant.vireqo.id/client.js' index.html | wc -l)" -eq 1
+          test "$(grep -o 'data-client-id="jelnusa-staging"' index.html | wc -l)" -eq 1
+          test "$(find locales -maxdepth 1 -name '*.json' | wc -l)" -eq 8
+          git diff --check
+
+      - name: Commit SEO patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No patch changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html phase7-seo-head-report.json
+          git commit -m "Phase 7: add canonical metadata and structured data"
+          git push origin HEAD:phase7-seo-geo-head

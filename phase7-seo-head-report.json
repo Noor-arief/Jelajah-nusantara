@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "index_size_before": 7853011,
+  "index_size_after": 7854749,
+  "delta_bytes": 1738,
+  "canonical": "https://jelnusa.com/",
+  "meta_description": true,
+  "open_graph": true,
+  "twitter_card": true,
+  "structured_data": [
+    "Organization",
+    "WebSite"
+  ],
+  "nusa_loader_preserved": true,
+  "tenant_preserved": true
+}
