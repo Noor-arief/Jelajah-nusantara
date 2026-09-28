@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "url": "https://jelnusa.com/about/",
+  "schema": [
+    "AboutPage",
+    "Organization"
+  ],
+  "sameAs": [
+    "https://www.linkedin.com/company/jelnusa"
+  ],
+  "purpose": "strengthen JelNusa entity clarity for search and AI systems",
+  "sitemap_updated": true,
+  "llms_updated": true,
+  "footer_about_target": "/about/",
+  "nusa_backend_touched": false,
+  "railway_touched": false,
+  "shared_bima_touched": false
+}
