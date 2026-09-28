@@ -317,11 +317,14 @@
 
     const links=[...footer.querySelectorAll("a")];
 
-    /* Contact becomes a real mail action. */
+    /* Real internal/contact destinations only; no placeholder navigation. */
     links.forEach(a=>{
       const label=(a.textContent||"").trim().toLowerCase();
       if(label==="contact"){
         a.href="mailto:arifmuhamad94@gmail.com";
+      }
+      if(label==="all destinations"){
+        a.href="/destinations/";
       }
     });
 
