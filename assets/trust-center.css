@@ -1,0 +1,17 @@
+/* JelNusa Phase 2 — FAQ, Legal & Trust Center */
+.jl-trust-list{display:grid;gap:12px;margin-top:18px}
+.jl-trust-item{border:1px solid #e5e7eb;border-radius:14px;background:#fff;overflow:hidden}
+.jl-trust-item summary{cursor:pointer;font-weight:700;padding:14px 16px;list-style:none}
+.jl-trust-item summary::-webkit-details-marker{display:none}
+.jl-trust-item summary::after{content:"+";float:right;font-size:18px;line-height:1}
+.jl-trust-item[open] summary::after{content:"−"}
+.jl-trust-item p{padding:0 16px 16px;color:#4b5563;line-height:1.65}
+.jl-trust-note{margin:14px 0;padding:14px 16px;border-radius:12px;background:#f7faf9;border:1px solid #dbe7e3;color:#334155;line-height:1.65}
+.jl-trust-meta{font-size:12px;color:#6b7280;margin-top:18px}
+.jl-trust-section{margin-top:22px}
+.jl-trust-section h3{margin-bottom:8px}
+.jl-trust-footer-link{display:inline-block}
+@media (max-width:640px){
+  .jl-trust-item summary{padding:13px 14px}
+  .jl-trust-item p{padding:0 14px 14px}
+}
