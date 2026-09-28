@@ -1,0 +1,70 @@
+name: JelNusa IndexNow Notify
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "about/**"
+      - "destinations/**"
+      - "guides/**"
+      - "faq/**"
+      - "sitemap.xml"
+      - "llms.txt"
+      - "4b1efc0223310325d73cd5a43421a9c863dbe82c5af3cda44f3445a1623be9a2.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notify-indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for GitHub Pages key propagation
+        shell: bash
+        run: |
+          set -euo pipefail
+          KEY_URL="https://jelnusa.com/4b1efc0223310325d73cd5a43421a9c863dbe82c5af3cda44f3445a1623be9a2.txt"
+          for i in 1 2 3 4 5 6; do
+            BODY="$(curl -fsSL --max-time 15 "$KEY_URL" || true)"
+            if [ "$BODY" = "4b1efc0223310325d73cd5a43421a9c863dbe82c5af3cda44f3445a1623be9a2" ]; then
+              echo "IndexNow key is publicly reachable."
+              exit 0
+            fi
+            echo "Key not reachable yet; retry $i/6..."
+            sleep 20
+          done
+          echo "IndexNow key did not propagate in time."
+          exit 1
+
+      - name: Notify IndexNow
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/indexnow.json <<'JSON'
+          {
+            "host": "jelnusa.com",
+            "key": "4b1efc0223310325d73cd5a43421a9c863dbe82c5af3cda44f3445a1623be9a2",
+            "keyLocation": "https://jelnusa.com/4b1efc0223310325d73cd5a43421a9c863dbe82c5af3cda44f3445a1623be9a2.txt",
+            "urlList": [
+              "https://jelnusa.com/",
+              "https://jelnusa.com/about/",
+              "https://jelnusa.com/destinations/",
+              "https://jelnusa.com/guides/",
+              "https://jelnusa.com/guides/plan-indonesia-trip/",
+              "https://jelnusa.com/faq/"
+            ]
+          }
+          JSON
+
+          STATUS="$(curl -sS -o /tmp/indexnow-response.txt -w "%{http_code}"             -H "Content-Type: application/json; charset=utf-8"             --data-binary @/tmp/indexnow.json             https://api.indexnow.org/IndexNow)"
+
+          echo "IndexNow HTTP status: $STATUS"
+          cat /tmp/indexnow-response.txt || true
+
+          case "$STATUS" in
+            200|202) exit 0 ;;
+            *) echo "IndexNow submission failed."; exit 1 ;;
+          esac
