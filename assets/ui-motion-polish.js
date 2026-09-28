@@ -381,6 +381,61 @@
     }
   }
 
+  function setupMobileFooterAccordion(){
+    const footer=document.querySelector("footer");
+    if(!footer) return;
+
+    const grid=footer.querySelector(".footer-grid") || footer;
+    const sections=[...grid.children].filter(section=>{
+      if(!(section instanceof HTMLElement)) return false;
+      const heading=section.querySelector(":scope > h2, :scope > h3, :scope > h4");
+      if(!heading) return false;
+      const label=(heading.textContent||"").trim().toLowerCase();
+      return ["explore","resources","information"].includes(label);
+    });
+
+    sections.forEach((section,index)=>{
+      if(section.classList.contains("jl-footer-accordion")) return;
+
+      const heading=section.querySelector(":scope > h2, :scope > h3, :scope > h4");
+      if(!heading) return;
+
+      section.classList.add("jl-footer-accordion");
+
+      const button=document.createElement("button");
+      button.type="button";
+      button.className="jl-footer-accordion-toggle";
+      button.textContent=(heading.textContent||"").trim();
+      button.setAttribute("aria-expanded","false");
+
+      const panel=document.createElement("div");
+      panel.className="jl-footer-accordion-panel";
+      panel.id="jl-footer-panel-"+index;
+      button.setAttribute("aria-controls",panel.id);
+
+      [...section.children].forEach(child=>{
+        if(child===heading) return;
+        panel.appendChild(child);
+      });
+
+      heading.hidden=true;
+      section.appendChild(button);
+      section.appendChild(panel);
+
+      button.addEventListener("click",()=>{
+        const nextOpen=!section.classList.contains("is-open");
+        sections.forEach(other=>{
+          if(other===section) return;
+          other.classList.remove("is-open");
+          const otherButton=other.querySelector(".jl-footer-accordion-toggle");
+          if(otherButton) otherButton.setAttribute("aria-expanded","false");
+        });
+        section.classList.toggle("is-open",nextOpen);
+        button.setAttribute("aria-expanded",String(nextOpen));
+      });
+    });
+  }
+
   function setupNavigationPolish(){
     document.addEventListener("click", function(event){
       const anchor=event.target.closest("header a, footer a");
@@ -418,6 +473,7 @@
     setupSectionMotion();
     setupNusaMotion();
     setupFooterCleanup();
+    setupMobileFooterAccordion();
     setupNavigationPolish();
   }
 
