@@ -74,13 +74,27 @@
       }
 
       .vireqo-ai-launcher:not([hidden]){
+        min-height:62px;
+        padding:14px 22px!important;
+        gap:11px!important;
+        font-size:15px!important;
+        letter-spacing:.01em;
+        border:1px solid rgba(255,255,255,.22)!important;
+        box-shadow:0 14px 34px rgba(15,76,76,.34),0 4px 12px rgba(0,0,0,.16)!important;
         animation:jlNusaLauncherIn 260ms cubic-bezier(.22,1,.36,1) both;
-        transition:transform 180ms cubic-bezier(.22,1,.36,1),box-shadow 220ms ease;
+        transition:transform 180ms cubic-bezier(.22,1,.36,1),box-shadow 220ms ease,filter 220ms ease;
       }
-      .vireqo-ai-launcher:hover{transform:translateY(-2px)}
+      .vireqo-ai-launcher:hover{
+        transform:translateY(-3px) scale(1.015);
+        box-shadow:0 18px 40px rgba(15,76,76,.38),0 6px 16px rgba(0,0,0,.18)!important;
+        filter:saturate(1.06);
+      }
       .vireqo-ai-launcher:active{transform:scale(.97)}
 
       .vireqo-ai-avatar{
+        width:34px!important;
+        height:34px!important;
+        flex-basis:34px!important;
         animation:vireqoNusaFloat 3.8s ease-in-out infinite!important;
       }
 
@@ -112,6 +126,20 @@
       }
 
       @media (max-width:768px){
+        .vireqo-ai-shell{
+          right:12px!important;
+          bottom:12px!important;
+        }
+        .vireqo-ai-launcher{
+          min-height:58px!important;
+          padding:12px 18px!important;
+          max-width:calc(100vw - 24px);
+        }
+        .vireqo-ai-widget{
+          width:calc(100vw - 20px)!important;
+          max-height:calc(100dvh - 20px)!important;
+          border-radius:18px!important;
+        }
         .vireqo-ai-inputbar input{font-size:16px!important}
       }
 
@@ -185,10 +213,68 @@
     },250);
   }
 
+  function setupFooterCleanup(){
+    const footer=document.querySelector("footer");
+    if(!footer) return;
+
+    const links=[...footer.querySelectorAll("a")];
+
+    /* Contact becomes a real mail action. */
+    links.forEach(a=>{
+      const label=(a.textContent||"").trim().toLowerCase();
+      if(label==="contact"){
+        a.href="mailto:arifmuhamad94@gmail.com";
+      }
+    });
+
+    /* Hide placeholder/deferred navigation instead of leaving dead links. */
+    const deferred=new Set([
+      "blog","photo gallery","tools","packing list","faq",
+      "privacy policy","partnerships"
+    ]);
+    links.forEach(a=>{
+      const label=(a.textContent||"").trim().toLowerCase();
+      if(deferred.has(label)){
+        a.hidden=true;
+        a.setAttribute("aria-hidden","true");
+        a.tabIndex=-1;
+      }
+    });
+
+    /* Remove legacy placeholder social buttons. */
+    links.forEach(a=>{
+      const href=(a.getAttribute("href")||"").trim();
+      const label=(a.textContent||"").trim();
+      if(href==="#" && ["📸","f","𝕏","P"].includes(label)){
+        a.hidden=true;
+        a.setAttribute("aria-hidden","true");
+        a.tabIndex=-1;
+      }
+    });
+
+    /* Keep one real contact shortcut visible in the social/contact area. */
+    const oldSocial=links.find(a=>{
+      const label=(a.textContent||"").trim();
+      const href=(a.getAttribute("href")||"").trim();
+      return href==="#" && ["📸","f","𝕏","P"].includes(label);
+    });
+    const socialWrap=oldSocial&&oldSocial.parentElement;
+    if(socialWrap && !socialWrap.querySelector(".jl-footer-email")){
+      const email=document.createElement("a");
+      email.className="jl-footer-email";
+      email.href="mailto:arifmuhamad94@gmail.com";
+      email.setAttribute("aria-label","Email JelNusa");
+      email.textContent="✉";
+      email.title="Email JelNusa";
+      socialWrap.appendChild(email);
+    }
+  }
+
   function init(){
     document.documentElement.classList.add("jl-phase15-motion");
     setupSectionMotion();
     setupNusaMotion();
+    setupFooterCleanup();
   }
 
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init,{once:true});
