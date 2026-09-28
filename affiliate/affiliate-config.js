@@ -6,28 +6,23 @@
     defaultLocale: "id",
     defaultProductType: "stay",
 
-    tracking: {
-      bookingAid: "",
-      agodaCid: ""
-    },
+    tracking: {},
 
     providers: {
       booking: {
         enabled: true,
         productTypes: ["stay"],
         priority: 10,
-        searchTemplate: "https://www.booking.com/searchresults.html?ss={destination}",
-        trackingParam: "aid",
-        trackingKey: "bookingAid"
+        mode: "server-resolved",
+        searchTemplate: "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination={destination}",
+        note: "Tracking is resolved server-side with JELNUSA_BOOKING_AID. Frontend never invents or stores an affiliate ID."
       },
       agoda: {
         enabled: false,
         productTypes: ["stay"],
         priority: 20,
-        searchTemplate: "https://www.agoda.com/search?text={destination}",
-        trackingParam: "cid",
-        trackingKey: "agodaCid",
-        note: "Enable only after a real Agoda affiliate CID is available."
+        mode: "manual-only",
+        note: "Enable only after a verified account-generated Agoda affiliate path is available."
       },
       traveloka: {
         enabled: false,
