@@ -1,0 +1,53 @@
+name: Phase 2 Trust Center Patch
+
+on:
+  push:
+    branches:
+      - phase-2-faq-legal-implementation
+    paths:
+      - ".github/workflows/phase2-trust-center-patch.yml"
+      - "tools/phase2_trust_center_patch.py"
+      - "assets/trust-center.css"
+      - "assets/trust-center.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-2-faq-legal-implementation
+          fetch-depth: 1
+
+      - name: Apply isolated Trust Center wiring
+        run: python tools/phase2_trust_center_patch.py
+
+      - name: Validate protected scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(grep -o 'assets/trust-center.css?v=20260928a' index.html | wc -l)" -eq 1
+          test "$(grep -o 'assets/trust-center.js?v=20260928a' index.html | wc -l)" -eq 1
+          test "$(grep -o 'https://assistant.vireqo.id/client.js' index.html | wc -l)" -eq 1
+          test "$(grep -o 'data-client-id="jelnusa-staging"' index.html | wc -l)" -eq 1
+          test "$(grep -o 'arifmuhamad942@gmail.com' index.html | wc -l)" -eq 0
+          test "$(find locales -maxdepth 1 -name '*.json' | wc -l)" -eq 8
+          git diff --check
+
+      - name: Commit patched files
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No patch changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html locales
+          git commit -m "feat: wire multilingual FAQ legal trust center"
+          git push origin HEAD:phase-2-faq-legal-implementation
