@@ -1,0 +1,51 @@
+name: JelNusa Phase 7 Destination Crawlability Build
+
+on:
+  push:
+    branches:
+      - phase7-destination-crawlability
+    paths:
+      - ".github/workflows/phase7-destination-crawlability-build.yml"
+      - "tools/phase7_destination_crawlability_build.py"
+      - "assets/ui-motion-polish.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase7-destination-crawlability
+          fetch-depth: 1
+
+      - name: Build crawlable destinations hub from existing cards
+        run: python tools/phase7_destination_crawlability_build.py
+
+      - name: Validate generated crawlability layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f destinations/index.html
+          test -f phase7-destination-crawlability-report.json
+          grep -q 'https://jelnusa.com/destinations/' sitemap.xml
+          grep -q 'href="/destinations/"' assets/ui-motion-polish.js
+          grep -q '"status": "PASS"' phase7-destination-crawlability-report.json
+          test "$(grep -o 'https://assistant.vireqo.id/client.js' index.html | wc -l)" -eq 1
+          test "$(grep -o 'data-client-id="jelnusa-staging"' index.html | wc -l)" -eq 1
+          test "$(find locales -maxdepth 1 -name '*.json' | wc -l)" -eq 8
+          git diff --check
+
+      - name: Commit generated crawlability layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add destinations/index.html sitemap.xml phase7-destination-crawlability-report.json
+          git commit -m "Phase 7: add crawlable destinations hub"
+          git push origin HEAD:phase7-destination-crawlability
