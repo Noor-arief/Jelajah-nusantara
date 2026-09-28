@@ -280,9 +280,9 @@
   function bindExistingFAQ(faq){
     const a=document.querySelector('footer [data-i18n="FAQ"]');
     if(!a||a.dataset.jlFaqBound==="1") return;
-    a.dataset.jlFaqBound="1"; a.href="#faq";
+    a.dataset.jlFaqBound="1";
+    a.href="/faq/";
     a.removeAttribute("data-coming-soon");
-    a.addEventListener("click",e=>{e.preventDefault();open(faq)});
   }
 
   function update(){

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "faq_count": 8,
+  "source": "existing JelNusa English trust-center FAQ copy",
+  "url": "https://jelnusa.com/faq/",
+  "schema": "FAQPage",
+  "sitemap_updated": true,
+  "llms_updated": true,
+  "footer_faq_target": "/faq/",
+  "guides_to_faq_link": true,
+  "nusa_backend_touched": false,
+  "railway_touched": false,
+  "shared_bima_touched": false
+}
