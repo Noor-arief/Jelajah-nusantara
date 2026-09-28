@@ -1,0 +1,53 @@
+name: Phase 1 Nav State Diagnosis
+
+on:
+  push:
+    branches:
+      - phase-1-nav-state-diagnosis
+    paths:
+      - ".github/workflows/phase1-nav-state-diagnosis.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1-nav-state-diagnosis
+          fetch-depth: 1
+
+      - name: Extract nav/backdrop state logic
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          s=Path("index.html").read_text(encoding="utf-8")
+          tokens=["nav-backdrop","navBackdrop","nav-toggle","primaryNav","classList.add(\"active\")","classList.toggle(\"active\")","classList.remove(\"active\")","body.style.overflow"]
+          out=[]
+          for token in tokens:
+            start=0
+            count=0
+            while True:
+              i=s.find(token,start)
+              if i<0: break
+              a=max(0,i-1800); b=min(len(s),i+3800)
+              out.append({"token":token,"offset":i,"snippet":s[a:b]})
+              start=i+len(token); count+=1
+              if count>=12: break
+          Path("phase1-nav-state-diagnosis.json").write_text(json.dumps({"matches":out},ensure_ascii=False,indent=2),encoding="utf-8")
+          PY
+
+      - name: Commit diagnosis
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase1-nav-state-diagnosis.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: diagnose mobile nav overlay state"
+          git push origin HEAD:phase-1-nav-state-diagnosis
