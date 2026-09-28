@@ -2,27 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jelnusa.com/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-09-29</lastmod>
   </url>
   <url>
     <loc>https://jelnusa.com/destinations/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-09-29</lastmod>
   </url>
   <url>
     <loc>https://jelnusa.com/guides/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-09-29</lastmod>
   </url>
   <url>
     <loc>https://jelnusa.com/faq/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-29</lastmod>
   </url>
   <url>
     <loc>https://jelnusa.com/guides/plan-indonesia-trip/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-09-29</lastmod>
   </url>
 </urlset>
