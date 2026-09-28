@@ -1,0 +1,96 @@
+name: Phase 1 Language Stack Validation
+
+on:
+  push:
+    branches:
+      - phase-1-language-stack-hotfix-v4
+    paths:
+      - ".github/workflows/phase1-language-stack-validation.yml"
+      - "assets/language-mobile-hotfix.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1-language-stack-hotfix-v4
+
+      - name: Install Selenium
+        run: python -m pip install selenium --quiet
+
+      - name: Run local site and validate language menu stacking
+        shell: bash
+        run: |
+          python -m http.server 8080 >/tmp/jelnusa-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 2
+          python - <<'PY'
+          import json, shutil, time
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          chrome=shutil.which("google-chrome")
+          if not chrome:
+              raise RuntimeError("google-chrome not found")
+
+          opts=Options()
+          opts.binary_location=chrome
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+
+          d=webdriver.Chrome(options=opts)
+          d.get("http://127.0.0.1:8080/")
+          time.sleep(1.5)
+
+          trigger=d.find_element(By.CSS_SELECTOR,".jl-language-trigger")
+          trigger.click()
+          time.sleep(.4)
+
+          state_open=d.execute_script("""
+          const p=s=>{const e=document.querySelector(s),c=e&&getComputedStyle(e);return e?{
+            className:e.className,z:c.zIndex,display:c.display,visibility:c.visibility,opacity:c.opacity
+          }:null};
+          return {header:p('header'),menu:p('.jl-language-menu'),backdrop:p('.jl-language-backdrop')};
+          """)
+          print("OPEN_STATE", json.dumps(state_open))
+
+          thai=d.find_element(By.CSS_SELECTOR,'.jl-language-menu button[data-lang="th"]')
+          thai.click()
+          time.sleep(.8)
+
+          state_after=d.execute_script("""
+          const p=s=>{const e=document.querySelector(s),c=e&&getComputedStyle(e);return e?{
+            className:e.className,z:c.zIndex,display:c.display,visibility:c.visibility,opacity:c.opacity,
+            style:e.getAttribute('style')
+          }:null};
+          return {
+            lang:document.documentElement.lang,
+            bodyOverflow:getComputedStyle(document.body).overflow,
+            header:p('header'),
+            root:p('#jelLanguageSwitcher'),
+            menu:p('.jl-language-menu'),
+            backdrop:p('.jl-language-backdrop'),
+            nav:p('#primaryNav'),
+            navBackdrop:p('#navBackdrop')
+          };
+          """)
+          print("AFTER_STATE", json.dumps(state_after,ensure_ascii=False))
+
+          assert state_after["lang"]=="th", state_after
+          assert "is-visible" not in (state_after["backdrop"]["className"] or ""), state_after
+          assert "is-open" not in (state_after["navBackdrop"]["className"] or ""), state_after
+          assert "is-open" not in (state_after["root"]["className"] or ""), state_after
+          assert "jl-language-layer-open" not in (state_after["header"]["className"] or ""), state_after
+
+          d.quit()
+          print("PASS: Thai selection clickable; overlays close cleanly.")
+          PY
