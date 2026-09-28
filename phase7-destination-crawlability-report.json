@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "destination_count": 35,
+  "source": "existing JelNusa English locale destination descriptions, paired to their destination titles",
+  "hub": "https://jelnusa.com/destinations/",
+  "sitemap_updated": true,
+  "llms_updated": true,
+  "footer_all_destinations_target": "/destinations/",
+  "nusa_backend_touched": false,
+  "railway_touched": false,
+  "shared_bima_touched": false
+}
