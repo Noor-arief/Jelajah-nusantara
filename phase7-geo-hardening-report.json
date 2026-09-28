@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "index_size_before": 7854749,
+  "index_size_after": 7855491,
+  "delta_bytes": 742,
+  "structured_data": [
+    "Organization",
+    "WebSite",
+    "WebPage"
+  ],
+  "canonical": "https://jelnusa.com/",
+  "llms_txt": true,
+  "nusa_loader_preserved": true,
+  "tenant_preserved": true,
+  "locale_count": 8,
+  "shared_bima_or_railway_touched": false
+}
