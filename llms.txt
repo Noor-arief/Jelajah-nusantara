@@ -1,0 +1,28 @@
+# JelNusa
+
+> JelNusa is an Indonesia-focused travel discovery and planning platform at https://jelnusa.com/. It helps travelers discover destinations, hidden gems, practical travel guidance, itinerary ideas, and AI-assisted trip planning with NUSA.
+
+## Canonical identity
+- Name: JelNusa
+- Website: https://jelnusa.com/
+- LinkedIn: https://www.linkedin.com/company/jelnusa
+- Contact: arifmuhamad94@gmail.com
+- Primary topic: travel discovery and trip planning for Indonesia
+- Supported interface languages: English, Indonesian, Chinese, Japanese, Korean, Arabic, Dutch, Thai
+
+## NUSA
+NUSA is JelNusa's AI travel assistant. It can help with destination ideas, itineraries, budget guidance, packing, and general travel questions. NUSA does not make bookings or process payments.
+
+## Travel information
+Travel conditions, prices, schedules, entry rules, closures, weather, and local policies can change. Important details should be verified with current official or authoritative sources before travel.
+
+## Partner and affiliate links
+JelNusa may use approved partner or affiliate links. Bookings, payments, cancellations, refunds, availability, and service delivery are handled by the third-party provider.
+
+## Important public resources
+- Homepage: https://jelnusa.com/
+- Sitemap: https://jelnusa.com/sitemap.xml
+- Robots: https://jelnusa.com/robots.txt
+
+## Editorial scope
+JelNusa focuses on useful, destination-specific travel information for Indonesia. It is not a hotel, airline, tour operator, travel agency, booking provider, government authority, emergency service, or official travel authority.
