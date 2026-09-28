@@ -1,0 +1,85 @@
+name: Phase 2 Legal Locale Verification
+
+on:
+  push:
+    branches:
+      - phase-2-faq-legal-audit
+    paths:
+      - ".github/workflows/phase2-legal-locale-verification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-2-faq-legal-audit
+      - run: python -m pip install selenium --quiet
+      - name: Verify live legal localization and footer targets
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, shutil, time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          opts=Options()
+          opts.binary_location=shutil.which("google-chrome")
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+
+          d=webdriver.Chrome(options=opts)
+          d.get("https://noor-arief.github.io/Jelajah-nusantara/")
+          time.sleep(4)
+
+          out={"languages":{}}
+          for lang in ["en","id","zh","ja","ko","ar","nl","th"]:
+            if d.execute_script("return document.documentElement.lang") != lang:
+              d.find_element(By.CSS_SELECTOR,'.jl-language-trigger').click()
+              time.sleep(.2)
+              d.find_element(By.CSS_SELECTOR,f'.jl-language-menu button[data-lang="{lang}"]').click()
+              time.sleep(.4)
+
+            data=d.execute_script("""
+              const terms=document.querySelector('#terms-and-conditions');
+              const privacy=document.querySelector('#privacy-policy');
+              const footer=document.querySelector('footer');
+              const ft=(label)=>[...footer.querySelectorAll('a')].find(a=>(a.textContent||'').trim().toLowerCase()===label);
+              const pick=(root,sel)=>root?.querySelector(sel)?.textContent?.trim()||null;
+              return {
+                htmlLang:document.documentElement.lang,
+                termsTitle:pick(terms,'h2'),
+                termsIntro:pick(terms,'.legal-intro'),
+                termsFirstHeading:pick(terms,'h3'),
+                termsFirstParagraph:terms?.querySelector('h3 + p')?.textContent?.trim()||null,
+                privacyTitle:pick(privacy,'h2'),
+                privacyFirstHeading:pick(privacy,'h3'),
+                privacyFirstParagraph:privacy?.querySelector('h3 + p')?.textContent?.trim()||null,
+                faqHref:ft('faq')?.getAttribute('href')||null,
+                privacyHidden:ft('privacy policy')?.hidden ?? null,
+                partnershipHidden:ft('partnerships')?.hidden ?? null,
+                contactHref:ft('contact')?.getAttribute('href')||null,
+                bodyText:(terms?.innerText||'')+(privacy?.innerText||'')
+              };
+            """)
+            out["languages"][lang]=data
+
+          Path("phase2-legal-locale-verification.json").write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding="utf-8")
+          d.quit()
+          PY
+      - name: Commit verification
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add phase2-legal-locale-verification.json
+          git commit -m "chore: verify Phase 2 legal localization"
+          git push origin HEAD:phase-2-faq-legal-audit
