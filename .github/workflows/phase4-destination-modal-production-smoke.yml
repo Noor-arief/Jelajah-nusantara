@@ -1,0 +1,78 @@
+name: Phase 4 Destination Modal Production Smoke
+
+on:
+  push:
+    branches:
+      - phase4-destination-modal-affiliate-hotfix
+    paths:
+      - ".github/workflows/phase4-destination-modal-production-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - run: python -m pip install selenium --quiet
+      - name: Verify live card and modal CTAs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,shutil,time
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          def driver():
+              o=Options();o.binary_location=shutil.which('google-chrome')
+              o.add_argument('--headless=new');o.add_argument('--no-sandbox');o.add_argument('--disable-dev-shm-usage')
+              o.add_argument('--window-size=430,932')
+              return webdriver.Chrome(options=o)
+
+          # Modal controls.
+          d=driver()
+          d.get('https://noor-arief.github.io/Jelajah-nusantara/')
+          time.sleep(5)
+          d.execute_script("openDestination('Raja Ampat')")
+          time.sleep(.5)
+          state=d.execute_script("""
+            const m=document.getElementById('destinationDetailModal');
+            return {
+              stay:m.querySelector('.jl-destination-stay-cta')?.href||null,
+              stayText:m.querySelector('.jl-modal-stay-label')?.textContent.trim()||null,
+              book:m.querySelector('.jl-things-book-stay')?.href||null,
+              bottom:m.querySelector('.jl-destination-bottom-stay')?.href||null,
+              bottomText:m.querySelector('.jl-destination-bottom-stay')?.textContent.trim()||null,
+              oldComing:(m.innerText||'').includes('Booking Link Coming Soon') || (m.innerText||'').includes('Tautan Pemesanan Segera Hadir')
+            }
+          """)
+          print(json.dumps(state,ensure_ascii=False,indent=2))
+          assert state['stay'] and 'destination=Raja%20Ampat' in state['stay'],state
+          assert state['book'] and 'destination=Raja%20Ampat' in state['book'],state
+          assert state['bottom'] and 'destination=Raja%20Ampat' in state['bottom'],state
+          assert state['stayText'] in ('Find Stays','Cari Penginapan'),state
+          assert not state['oldComing'],state
+          d.quit()
+
+          # Card CTA: same-tab navigation must change page.
+          d=driver()
+          d.get('https://noor-arief.github.io/Jelajah-nusantara/')
+          time.sleep(5)
+          card=d.find_element(By.XPATH,"//*[contains(@class,'region-card')][.//h3[normalize-space()='Raja Ampat']]")
+          a=card.find_element(By.CSS_SELECTOR,'.jl-affiliate-card-cta')
+          d.execute_script("arguments[0].scrollIntoView({block:'center'})",a)
+          time.sleep(.3)
+          before=d.current_url
+          a.click()
+          for _ in range(30):
+              time.sleep(.2)
+              if d.current_url!=before: break
+          print('CARD NAV',d.current_url)
+          assert d.current_url!=before,d.current_url
+          assert 'assistant.vireqo.id/affiliate/out' in d.current_url or 'booking.com' in d.current_url,d.current_url
+          d.quit()
+
+          print('PASS LIVE destination modal + card affiliate smoke')
+          PY
