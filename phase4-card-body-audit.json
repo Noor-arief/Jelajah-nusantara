@@ -1,0 +1,33 @@
+{
+  "children": [
+    {
+      "className": "region-card-region",
+      "href": null,
+      "tag": "SPAN",
+      "text": "PAPUA",
+      "type": null
+    },
+    {
+      "className": "",
+      "href": null,
+      "tag": "H3",
+      "text": "Raja Ampat",
+      "type": null
+    },
+    {
+      "className": "",
+      "href": null,
+      "tag": "P",
+      "text": "World-class diving spots with 1,500+ fish species. A marine paradise for nature lovers and underwater photographers.",
+      "type": null
+    },
+    {
+      "className": "region-card-actions",
+      "href": null,
+      "tag": "DIV",
+      "text": "Explore Destination →",
+      "type": null
+    }
+  ],
+  "html": "\n                <span class=\"region-card-region\" data-i18n=\"Papua\">Papua</span>\n                <h3>Raja Ampat</h3>\n                <p data-i18n=\"World-class diving spots with 1,500+ fish species. A marine paradise for nature lovers and underwater photographers.\">World-class diving spots with 1,500+ fish species. A marine paradise for nature lovers and underwater photographers.</p>\n                <div class=\"region-card-actions\">\n                    <button class=\"region-explore\" type=\"button\" onclick=\"openDestination('Raja Ampat')\"><span data-i18n=\"Explore Destination →\">Explore Destination →</span></button>\n                    <button class=\"region-hotel region-hotel-disabled\" type=\"button\" onclick=\"showAffiliateNotice('Raja Ampat')\">🏨 <span data-i18n=\"Booking Link Coming Soon\">Booking Link Coming Soon</span></button>\n                </div>\n            "
+}
