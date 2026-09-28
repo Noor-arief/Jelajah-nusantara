@@ -22,6 +22,7 @@ JelNusa may use approved partner or affiliate links. Bookings, payments, cancell
 ## Important public resources
 - Homepage: https://jelnusa.com/
 - Destinations directory: https://jelnusa.com/destinations/
+- Travel guides directory: https://jelnusa.com/guides/
 - Sitemap: https://jelnusa.com/sitemap.xml
 - Robots: https://jelnusa.com/robots.txt
 

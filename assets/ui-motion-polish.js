@@ -326,6 +326,15 @@
       if(label==="all destinations"){
         a.href="/destinations/";
       }
+      if(label==="travel guides"){
+        a.href="/guides/";
+      }
+      if(label==="safety guide"){
+        a.href="/guides/#safety-guide";
+      }
+      if(label==="budget planner"){
+        a.href="/guides/#budget-smart";
+      }
     });
 
     /* Hide placeholder/deferred navigation instead of leaving dead links. */
