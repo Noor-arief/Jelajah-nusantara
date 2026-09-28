@@ -1,0 +1,271 @@
+{
+  "cards": [
+    {
+      "description": "World-class diving spots with 1,500+ fish species. A marine paradise for nature lovers and underwater photographers.",
+      "name": "Raja Ampat",
+      "region": "Papua",
+      "text": "PAPUA\nRaja Ampat\n\nWorld-class diving spots with 1,500+ fish species. A marine paradise for nature lovers and underwater photographers.\n\nExplore Destination →"
+    },
+    {
+      "description": "Unique funeral ceremonies and traditional tongkonan houses. Experience Indonesia's richest cultural heritage.",
+      "name": "Tana Toraja",
+      "region": "Sulawesi",
+      "text": "SULAWESI\nTana Toraja\n\nUnique funeral ceremonies and traditional tongkonan houses. Experience Indonesia's richest cultural heritage.\n\nExplore Destination →"
+    },
+    {
+      "description": "Pristine beaches with granite formations. Crystal clear waters and zero crowds – a true hidden gem.",
+      "name": "Belitung Island",
+      "region": "Sumatra",
+      "text": "SUMATRA\nBelitung Island\n\nPristine beaches with granite formations. Crystal clear waters and zero crowds – a true hidden gem.\n\nExplore Destination →"
+    },
+    {
+      "description": "942 fish species in pristine waters. A remote marine paradise perfect for serious divers.",
+      "name": "Wakatobi",
+      "region": "Sulawesi",
+      "text": "SULAWESI\nWakatobi\n\n942 fish species in pristine waters. A remote marine paradise perfect for serious divers.\n\nExplore Destination →"
+    },
+    {
+      "description": "Crystal-clear mirror lake with unique water phenomena. A photographer's dream destination.",
+      "name": "Danau Labuan Cermin",
+      "region": "Kalimantan",
+      "text": "KALIMANTAN\nDanau Labuan Cermin\n\nCrystal-clear mirror lake with unique water phenomena. A photographer's dream destination.\n\nExplore Destination →"
+    },
+    {
+      "description": "Megalithic culture and the famous Pasola Festival. Dramatic landscapes and authentic traditions.",
+      "name": "Sumba Island",
+      "region": "Bali & Nusa Tenggara",
+      "text": "BALI & NUSA TENGGARA\nSumba Island\n\nMegalithic culture and the famous Pasola Festival. Dramatic landscapes and authentic traditions.\n\nExplore Destination →"
+    },
+    {
+      "description": "A vast volcanic lake surrounded by dramatic highlands and Batak heritage, with Samosir Island offering a slower, scenic side of North Sumatra.",
+      "name": "Danau Toba",
+      "region": "Sumatra",
+      "text": "SUMATRA\nDanau Toba\n\nA vast volcanic lake surrounded by dramatic highlands and Batak heritage, with Samosir Island offering a slower, scenic side of North Sumatra.\n\nExplore Destination →"
+    },
+    {
+      "description": "A gateway to the Gunung Leuser rainforest, known for jungle trekking, river adventures and the chance to experience Sumatra's remarkable wildlife.",
+      "name": "Bukit Lawang",
+      "region": "Sumatra",
+      "text": "SUMATRA\nBukit Lawang\n\nA gateway to the Gunung Leuser rainforest, known for jungle trekking, river adventures and the chance to experience Sumatra's remarkable wildlife.\n\nExplore Destination →"
+    },
+    {
+      "description": "A remote island escape famous for powerful surf, tropical scenery and a slower way of life far from Indonesia's busiest beach destinations.",
+      "name": "Mentawai Islands",
+      "region": "Sumatra",
+      "text": "SUMATRA\nMentawai Islands\n\nA remote island escape famous for powerful surf, tropical scenery and a slower way of life far from Indonesia's busiest beach destinations.\n\nExplore Destination →"
+    },
+    {
+      "description": "Set on Weh Island at Indonesia's western edge, Sabang combines clear waters, coral reefs, beaches and an easy-going island atmosphere.",
+      "name": "Sabang",
+      "region": "Sumatra",
+      "text": "SUMATRA\nSabang\n\nSet on Weh Island at Indonesia's western edge, Sabang combines clear waters, coral reefs, beaches and an easy-going island atmosphere.\n\nExplore Destination →"
+    },
+    {
+      "description": "Indonesia's energetic capital, where heritage districts, modern city life, museums and a huge culinary scene come together in one destination.",
+      "name": "Jakarta",
+      "region": "Java",
+      "text": "JAVA\nJakarta\n\nIndonesia's energetic capital, where heritage districts, modern city life, museums and a huge culinary scene come together in one destination.\n\nExplore Destination →"
+    },
+    {
+      "description": "A cultural heartland known for royal heritage, traditional arts and easy access to some of Java's most remarkable temples and historic landscapes.",
+      "name": "Yogyakarta",
+      "region": "Java",
+      "text": "JAVA\nYogyakarta\n\nA cultural heartland known for royal heritage, traditional arts and easy access to some of Java's most remarkable temples and historic landscapes.\n\nExplore Destination →"
+    },
+    {
+      "description": "A lively highland city blending distinctive architecture, creative culture, local food and cool mountain surroundings.",
+      "name": "Bandung",
+      "region": "Java",
+      "text": "JAVA\nBandung\n\nA lively highland city blending distinctive architecture, creative culture, local food and cool mountain surroundings.\n\nExplore Destination →"
+    },
+    {
+      "description": "An iconic volcanic landscape famous for dramatic sunrises, sea-of-cloud views and unforgettable adventures across the Bromo Tengger region.",
+      "name": "Bromo",
+      "region": "Java",
+      "text": "JAVA\nBromo\n\nAn iconic volcanic landscape famous for dramatic sunrises, sea-of-cloud views and unforgettable adventures across the Bromo Tengger region.\n\nExplore Destination →"
+    },
+    {
+      "description": "A gateway to East Java's wild side, with volcanic landscapes, coastal escapes and access to the extraordinary Ijen area.",
+      "name": "Banyuwangi",
+      "region": "Java",
+      "text": "JAVA\nBanyuwangi\n\nA gateway to East Java's wild side, with volcanic landscapes, coastal escapes and access to the extraordinary Ijen area.\n\nExplore Destination →"
+    },
+    {
+      "description": "An island where Balinese culture, lush landscapes, beaches, wellness retreats and world-class hospitality come together.",
+      "name": "Bali",
+      "region": "Bali & Nusa Tenggara",
+      "text": "BALI & NUSA TENGGARA\nBali\n\nAn island where Balinese culture, lush landscapes, beaches, wellness retreats and world-class hospitality come together.\n\nExplore Destination →"
+    },
+    {
+      "description": "A more laid-back island escape with beautiful beaches, surf spots, Sasak culture and the adventurous landscapes of Mount Rinjani.",
+      "name": "Lombok",
+      "region": "Bali & Nusa Tenggara",
+      "text": "BALI & NUSA TENGGARA\nLombok\n\nA more laid-back island escape with beautiful beaches, surf spots, Sasak culture and the adventurous landscapes of Mount Rinjani.\n\nExplore Destination →"
+    },
+    {
+      "description": "The gateway to Komodo National Park, combining island-hopping, dramatic coastal scenery, diving and unforgettable encounters with Komodo dragons.",
+      "name": "Labuan Bajo",
+      "region": "Bali & Nusa Tenggara",
+      "text": "BALI & NUSA TENGGARA\nLabuan Bajo\n\nThe gateway to Komodo National Park, combining island-hopping, dramatic coastal scenery, diving and unforgettable encounters with Komodo dragons.\n\nExplore Destination →"
+    },
+    {
+      "description": "A diverse island of volcanic landscapes, traditional villages, turquoise seas and adventurous journeys far beyond the usual tourist route.",
+      "name": "Flores",
+      "region": "Bali & Nusa Tenggara",
+      "text": "BALI & NUSA TENGGARA\nFlores\n\nA diverse island of volcanic landscapes, traditional villages, turquoise seas and adventurous journeys far beyond the usual tourist route.\n\nExplore Destination →"
+    },
+    {
+      "description": "Indonesia's new capital in East Kalimantan, offering a glimpse into a planned future city shaped by modern architecture, green spaces and a new urban identity.",
+      "name": "IKN Nusantara",
+      "region": "Kalimantan",
+      "text": "KALIMANTAN\nIKN Nusantara\n\nIndonesia's new capital in East Kalimantan, offering a glimpse into a planned future city shaped by modern architecture, green spaces and a new urban identity.\n\nExplore Destination →"
+    },
+    {
+      "description": "A spectacular island escape with turquoise waters, coral reefs and rich marine life, ideal for diving, snorkeling and slow days by the sea.",
+      "name": "Derawan Islands",
+      "region": "Kalimantan",
+      "text": "KALIMANTAN\nDerawan Islands\n\nA spectacular island escape with turquoise waters, coral reefs and rich marine life, ideal for diving, snorkeling and slow days by the sea.\n\nExplore Destination →"
+    },
+    {
+      "description": "A rainforest destination in Central Kalimantan known for orangutan conservation, river journeys and immersive wildlife experiences in the wild.",
+      "name": "Tanjung Puting",
+      "region": "Kalimantan",
+      "text": "KALIMANTAN\nTanjung Puting\n\nA rainforest destination in Central Kalimantan known for orangutan conservation, river journeys and immersive wildlife experiences in the wild.\n\nExplore Destination →"
+    },
+    {
+      "description": "A peaceful gateway into the Meratus highlands, combining forest scenery, river adventures and the living traditions of South Kalimantan's Dayak communities.",
+      "name": "Loksado",
+      "region": "Kalimantan",
+      "text": "KALIMANTAN\nLoksado\n\nA peaceful gateway into the Meratus highlands, combining forest scenery, river adventures and the living traditions of South Kalimantan's Dayak communities.\n\nExplore Destination →"
+    },
+    {
+      "description": "A cool highland city surrounded by volcanic landscapes, gardens and Minahasan culture, offering a refreshing side of North Sulawesi beyond the coast.",
+      "name": "Tomohon",
+      "region": "Sulawesi",
+      "text": "SULAWESI\nTomohon\n\nA cool highland city surrounded by volcanic landscapes, gardens and Minahasan culture, offering a refreshing side of North Sulawesi beyond the coast.\n\nExplore Destination →"
+    },
+    {
+      "description": "A remote archipelago in Central Sulawesi where clear seas, coral reefs, traditional stilt villages and quiet island life create a true off-the-beaten-path escape.",
+      "name": "Togean Islands",
+      "region": "Sulawesi",
+      "text": "SULAWESI\nTogean Islands\n\nA remote archipelago in Central Sulawesi where clear seas, coral reefs, traditional stilt villages and quiet island life create a true off-the-beaten-path escape.\n\nExplore Destination →"
+    },
+    {
+      "description": "A world-class marine destination in North Sulawesi, known for clear waters, dramatic coral walls and rich underwater biodiversity that makes diving and snorkeling unforgettable.",
+      "name": "Bunaken",
+      "region": "Sulawesi",
+      "text": "SULAWESI\nBunaken\n\nA world-class marine destination in North Sulawesi, known for clear waters, dramatic coral walls and rich underwater biodiversity that makes diving and snorkeling unforgettable.\n\nExplore Destination →"
+    },
+    {
+      "description": "A secluded tropical beach on Seram Island, where crystal-clear turquoise water, forested hills and overwater cottages create an unforgettable island escape.",
+      "name": "Pantai Ora",
+      "region": "Maluku",
+      "text": "MALUKU\nPantai Ora\n\nA secluded tropical beach on Seram Island, where crystal-clear turquoise water, forested hills and overwater cottages create an unforgettable island escape.\n\nExplore Destination →"
+    },
+    {
+      "description": "A historic island destination where the legacy of the spice trade meets colonial heritage, volcanic scenery, clear seas and remarkable diving.",
+      "name": "Banda Neira",
+      "region": "Maluku",
+      "text": "MALUKU\nBanda Neira\n\nA historic island destination where the legacy of the spice trade meets colonial heritage, volcanic scenery, clear seas and remarkable diving.\n\nExplore Destination →"
+    },
+    {
+      "description": "An island paradise known for powdery white beaches, turquoise lagoons and a relaxed coastal atmosphere far from Indonesia's busiest destinations.",
+      "name": "Kepulauan Kei",
+      "region": "Maluku",
+      "text": "MALUKU\nKepulauan Kei\n\nAn island paradise known for powdery white beaches, turquoise lagoons and a relaxed coastal atmosphere far from Indonesia's busiest destinations.\n\nExplore Destination →"
+    },
+    {
+      "description": "Maluku's lively gateway city, combining coastal scenery, local culture, historic landmarks and access to the islands and marine adventures beyond Ambon Bay.",
+      "name": "Ambon",
+      "region": "Maluku",
+      "text": "MALUKU\nAmbon\n\nMaluku's lively gateway city, combining coastal scenery, local culture, historic landmarks and access to the islands and marine adventures beyond Ambon Bay.\n\nExplore Destination →"
+    },
+    {
+      "description": "A vast protected landscape on Seram Island, blending rainforest, mountains, coastline and traditional villages for travelers seeking a deeper nature experience.",
+      "name": "Taman Nasional Manusela",
+      "region": "Maluku",
+      "text": "MALUKU\nTaman Nasional Manusela\n\nA vast protected landscape on Seram Island, blending rainforest, mountains, coastline and traditional villages for travelers seeking a deeper nature experience.\n\nExplore Destination →"
+    },
+    {
+      "description": "A spectacular highland valley surrounded by rugged mountains, offering immersive trekking, dramatic landscapes and encounters with the living traditions of Papua's mountain communities.",
+      "name": "Lembah Baliem",
+      "region": "Papua",
+      "text": "PAPUA\nLembah Baliem\n\nA spectacular highland valley surrounded by rugged mountains, offering immersive trekking, dramatic landscapes and encounters with the living traditions of Papua's mountain communities.\n\nExplore Destination →"
+    },
+    {
+      "description": "A vast protected wilderness stretching from tropical lowlands to high mountain landscapes, offering an extraordinary journey into Papua's remote natural world.",
+      "name": "Taman Nasional Lorentz",
+      "region": "Papua",
+      "text": "PAPUA\nTaman Nasional Lorentz\n\nA vast protected wilderness stretching from tropical lowlands to high mountain landscapes, offering an extraordinary journey into Papua's remote natural world.\n\nExplore Destination →"
+    },
+    {
+      "description": "A remarkable marine destination known for clear tropical waters, coral ecosystems and encounters with whale sharks amid the rich biodiversity of Cenderawasih Bay.",
+      "name": "Taman Nasional Teluk Cenderawasih",
+      "region": "Papua",
+      "text": "PAPUA\nTaman Nasional Teluk Cenderawasih\n\nA remarkable marine destination known for clear tropical waters, coral ecosystems and encounters with whale sharks amid the rich biodiversity of Cenderawasih Bay.\n\nExplore Destination →"
+    },
+    {
+      "description": "A scenic lake near Jayapura surrounded by green hills and small islands, where beautiful landscapes meet the distinctive culture and traditions of the Sentani people.",
+      "name": "Danau Sentani",
+      "region": "Papua",
+      "text": "PAPUA\nDanau Sentani\n\nA scenic lake near Jayapura surrounded by green hills and small islands, where beautiful landscapes meet the distinctive culture and traditions of the Sentani people.\n\nExplore Destination →"
+    }
+  ],
+  "globals": {},
+  "keys": [
+    "renderJelajahRegion",
+    "openDestination",
+    "closeDestination",
+    "focusDestination"
+  ],
+  "tabs": [
+    {
+      "dataset": {
+        "region": "all"
+      },
+      "text": "All Indonesia"
+    },
+    {
+      "dataset": {
+        "region": "Sumatra"
+      },
+      "text": "Sumatra"
+    },
+    {
+      "dataset": {
+        "region": "Java"
+      },
+      "text": "Java"
+    },
+    {
+      "dataset": {
+        "region": "Bali & Nusa Tenggara"
+      },
+      "text": "Bali & Nusa Tenggara"
+    },
+    {
+      "dataset": {
+        "region": "Kalimantan"
+      },
+      "text": "Kalimantan"
+    },
+    {
+      "dataset": {
+        "region": "Sulawesi"
+      },
+      "text": "Sulawesi"
+    },
+    {
+      "dataset": {
+        "region": "Maluku"
+      },
+      "text": "Maluku"
+    },
+    {
+      "dataset": {
+        "region": "Papua"
+      },
+      "text": "Papua"
+    }
+  ]
+}
