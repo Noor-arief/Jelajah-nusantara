@@ -1,0 +1,79 @@
+name: Phase 1 Language Position Validation v5
+
+on:
+  push:
+    branches:
+      - phase-1-language-position-hotfix-v5
+    paths:
+      - ".github/workflows/phase1-language-position-validation-v5.yml"
+      - "assets/language-mobile-hotfix.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-1-language-position-hotfix-v5
+      - run: python -m pip install selenium --quiet
+      - name: Validate bottom sheet stays inside viewport
+        shell: bash
+        run: |
+          python -m http.server 8080 >/tmp/jelnusa-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 2
+          python - <<'PY'
+          import json, shutil, time
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+
+          opts=Options()
+          opts.binary_location=shutil.which("google-chrome")
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=430,932")
+          d=webdriver.Chrome(options=opts)
+          d.get("http://127.0.0.1:8080/")
+          time.sleep(1.5)
+
+          d.find_element(By.CSS_SELECTOR,".jl-language-trigger").click()
+          time.sleep(.4)
+          pos=d.execute_script("""
+            const e=document.querySelector('.jl-language-menu');
+            const r=e.getBoundingClientRect();
+            return {top:r.top,bottom:r.bottom,height:r.height,innerHeight:innerHeight,
+                    display:getComputedStyle(e).display,visibility:getComputedStyle(e).visibility,
+                    opacity:getComputedStyle(e).opacity};
+          """)
+          print("MENU",json.dumps(pos))
+          assert pos["top"] >= 0, pos
+          assert pos["bottom"] <= pos["innerHeight"] + 1, pos
+          assert pos["display"] != "none", pos
+          assert pos["visibility"] == "visible", pos
+
+          d.find_element(By.CSS_SELECTOR,'.jl-language-menu button[data-lang="th"]').click()
+          time.sleep(.8)
+          after=d.execute_script("""
+            return {
+              lang:document.documentElement.lang,
+              root:document.querySelector('#jelLanguageSwitcher').className,
+              backdrop:document.querySelector('.jl-language-backdrop').className,
+              navBackdrop:document.querySelector('#navBackdrop').className,
+              bodyOverflow:getComputedStyle(document.body).overflow
+            };
+          """)
+          print("AFTER",json.dumps(after))
+          assert after["lang"]=="th", after
+          assert "is-open" not in after["root"], after
+          assert "is-visible" not in after["backdrop"], after
+          assert "is-open" not in after["navBackdrop"], after
+          d.quit()
+          print("PASS")
+          PY
