@@ -125,7 +125,7 @@
   "nusa": {
     "close_reset": true,
     "conversation": {
-      "reply": "Baik, tidak apa-apa. Tentu, kita langsung susun gambaran perjalanan Raja Ampat 4 hari. Raja Ampat ada di Papua dan umumnya diakses lewat Sorong, jadi hari pertama dan terakhir biasanya banyak terpakai untuk perjalanan dan transfer. Karena itu, 4 hari terasa cukup singkat—cukup untuk menikmati satu area utama saja, bukan menjelajah banyak pulau.\n\nGambaran itinerary 4 hari\n\nHari 1: Tiba di Sorong, lanjut transfer ke area Raja Ampat (umumnya ke Waisai atau langsung ke resort/penginapan pilihan). Sisa hari untuk check-in, istirahat, dan menikmati sunset. Belum ada aktivitas berat.\n\nHari 2: Fokus snorkeling atau diving di spot sekitar. Raja Ampat terkenal dengan biodiversitas lautnya, jadi ini hari terbaik untuk menikmati bawah laut. Kalau tidak diving, snorkeling tetap memuaskan.\n\nHari 3: Isla",
+      "reply": "Baik, tidak apa-apa. Tentu, aku bantu susun gambaran 4 hari di Raja Ampat. Perlu dicatat dulu: Raja Ampat itu wilayah kepulauan, jadi pergerakan antar spot umumnya pakai kapal/boat, dan waktu tempuh bisa berubah tergantung cuaca serta operator. Harga, jadwal, dan ketersediaan penginapan perlu diverifikasi ke sumber terbaru atau partner yang aktif.\n\nGambaran itinerary 4 hari (basis Sorong - Waisai - area pulau):\n\nHari 1 - Tiba dan penyesuaian\nTiba di Sorong, lanjut perjalanan ke Waisai (ibukota Raja Ampat) dengan kapal ferry. Setelah tiba, check-in penginapan, lalu santai menikmati sekitaran Waisai atau pantai terdekat. Hari ini sebaiknya ringan karena perjalanan cukup melelahkan.\n\nHari 2 - Island hopping klasik\nJelajah pulau-pulau ikonik seperti Piaynemo dan Telaga Bintang untuk viewpoint ",
       "ctas": [
         {
           "label": "Cari Penginapan · Raja Ampat",
@@ -133,14 +133,6 @@
           "provider": "booking",
           "product_type": "stay",
           "destination": "Raja Ampat",
-          "tracked": false
-        },
-        {
-          "label": "Cari Penginapan · Bali",
-          "url": "https://assistant.vireqo.id/affiliate/out?client_id=jelnusa-staging&product_type=stay&destination=Bali",
-          "provider": "booking",
-          "product_type": "stay",
-          "destination": "Bali",
           "tracked": false
         }
       ]
